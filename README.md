@@ -34,8 +34,5 @@ A desktop application that uses a local CSV database to provide instant wine and
     python app.py
     ```
 
-## 💡 Pro Tip
-To turn this into a standalone `.exe` file that runs without Python:
-```bash
-pip install pyinstaller
-pyinstaller --onefile --windowed app.py
+## 💡EXE file:
+I also created a .EXE file for easy use but kept the .py file if anyone wanted to play around with the code
