@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eileen's Vibe ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #e8eaf6 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 3rem;
+      transition: background 0.6s ease;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #c2185b;
+      text-shadow: 2px 2px 0 #f8bbd0;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+      color: #ad1457;
+      opacity: 0.75;
+    }
+
+    .moods {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .mood-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 1rem 1.3rem;
+      cursor: pointer;
+      border: 3px solid transparent;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .mood-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 22px rgba(0,0,0,0.11);
+    }
+
+    .mood-card.active {
+      border-color: var(--accent);
+      background: var(--bg);
+      transform: scale(1.02);
+      box-shadow: 0 8px 28px var(--shadow);
+    }
+
+    .emoji {
+      font-size: 2rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .text { flex: 1; }
+
+    .label {
+      font-size: 0.97rem;
+      font-weight: 800;
+      color: #2d2d2d;
+    }
+
+    .sub {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-top: 0.15rem;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid #ddd;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .mood-card.active .dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--shadow);
+    }
+
+    .badge {
+      position: absolute;
+      top: 7px;
+      right: 11px;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      text-transform: uppercase;
+    }
+
+    .mood-card.active .badge { opacity: 1; }
+
+    /* mood colour themes */
+    [data-mood="1"] { --accent:#e91e8c; --bg:#fce4ec; --shadow:rgba(233,30,140,0.18); }
+    [data-mood="2"] { --accent:#e53935; --bg:#ffebee; --shadow:rgba(229,57,53,0.18); }
+    [data-mood="3"] { --accent:#9c27b0; --bg:#f3e5f5; --shadow:rgba(156,39,176,0.18); }
+    [data-mood="4"] { --accent:#00acc1; --bg:#e0f7fa; --shadow:rgba(0,172,193,0.18); }
+    [data-mood="5"] { --accent:#ff5722; --bg:#fbe9e7; --shadow:rgba(255,87,34,0.18); }
+    [data-mood="6"] { --accent:#7b1fa2; --bg:#ede7f6; --shadow:rgba(123,31,162,0.18); }
+    [data-mood="7"] { --accent:#f57c00; --bg:#fff3e0; --shadow:rgba(245,124,0,0.18); }
+    [data-mood="8"] { --accent:#212121; --bg:#f5f5f5; --shadow:rgba(33,33,33,0.22); }
+    [data-mood="9"] { --accent:#b71c1c; --bg:#ffebee; --shadow:rgba(183,28,28,0.18); }
+
+    footer {
+      margin-top: 2.5rem;
+      font-size: 0.82rem;
+      color: #c2185b;
+      opacity: 0.55;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Eileen's Vibe Check ✨</h1>
+    <p>tap a mood · it saves automatically 💾</p>
+  </header>
+
+  <div class="moods" id="moodList"></div>
+
+  <footer>made with 💕 just for you</footer>
+
+  <script>
+    const moods = [
+      { id: 1, emoji: "🥂", label: "im lowkey in the mood",                          sub: "soft hints, say less~" },
+      { id: 2, emoji: "🔥", label: "im highkey in the mood",                          sub: "no subtlety here lol" },
+      { id: 3, emoji: "🥰", label: "im in the mood for cuddles & kisses",             sub: "soft hours activated" },
+      { id: 4, emoji: "😌", label: "i just wanna sit beside you & chill",             sub: "quiet company hits different" },
+      { id: 5, emoji: "😤", label: "im mad",                                             sub: "tread carefully bestie" },
+      { id: 6, emoji: "🥺", label: "i miss hanging out",                               sub: "we need a date asap" },
+      { id: 7, emoji: "🍕😤", label: "hunger & anger (hangry)",                         sub: "feed me first, talk later" },
+      { id: 8, emoji: "🐲", label: "novel-level freaky mood",                          sub: "you already know what it is" },
+      { id: 9, emoji: "🩸", label: "blood & bones",                                    sub: "period. literally." },
+    ];
+
+    const KEY = 'eileen_mood_v1';
+    const list = document.getElementById('moodList');
+
+    function render(active) {
+      list.innerHTML = '';
+      moods.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'mood-card' + (m.id === active ? ' active' : '');
+        card.dataset.mood = m.id;
+        card.innerHTML = `
+          <span class="emoji">${m.emoji}</span>
+          <div class="text">
+            <div class="label">${m.label}</div>
+            <div class="sub">${m.sub}</div>
+          </div>
+          <div class="dot"></div>
+          <span class="badge">current vibe</span>
+        `;
+        card.addEventListener('click', () => {
+          const next = m.id === active ? null : m.id;
+          localStorage.setItem(KEY, next ?? '');
+          render(next);
+        });
+        list.appendChild(card);
+      });
+    }
+
+    const saved = localStorage.getItem(KEY);
+    render(saved ? parseInt(saved, 10) : null);
+  </script>
+
+</body>
+</html>
