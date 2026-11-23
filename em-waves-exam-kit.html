@@ -287,9 +287,9 @@ canvas { display: block; width: 100%; max-width: 100%; border-radius: 10px; back
         <div class="lab">
           <div class="lab-title">Lab · field profile E(r)</div>
           <div class="controls">
-            <label>Solenoid radius R <span class="v" id="fR-v"></span><input type="range" id="fR" min="1" max="10" step="0.5" value="5"></label>
-            <label>Rate di/dt (A/s) <span class="v" id="fk-v"></span><input type="range" id="fk" min="1" max="100" step="1" value="40"></label>
-            <label>Turns per metre n <span class="v" id="fn-v"></span><input type="range" id="fn" min="500" max="5000" step="100" value="2000"></label>
+            <label>Solenoid radius R <span class="v" id="fR-v"></span><input type="range" id="fR" min="1" max="10" step="0.5" value="6"></label>
+            <label>Rate di/dt (A/s) <span class="v" id="fk-v"></span><input type="range" id="fk" min="1" max="100" step="1" value="50"></label>
+            <label>Turns per metre n <span class="v" id="fn-v"></span><input type="range" id="fn" min="500" max="5000" step="100" value="3000"></label>
             <label>Probe distance r <span class="v" id="fr-v"></span><input type="range" id="fr" min="0.5" max="20" step="0.5" value="3"></label>
           </div>
           <canvas id="fcanvas" height="220"></canvas>
@@ -703,17 +703,23 @@ canvas { display: block; width: 100%; max-width: 100%; border-radius: 10px; back
     $("fr-v").textContent = (r * 100).toFixed(1) + " cm";
     function Ef(x) { return x <= R ? MU0 * n * k * x / 2 : MU0 * n * k * R * R / (2 * x); }
     var g = setupCanvas($("fcanvas"), 220), ctx = g.ctx, W = g.w, H = g.h;
-    var pad = 40, xmax = 0.2, ymax = MU0 * n * k * R / 2 * 1.2;
+    // Fixed axis (0–12 mV/m) so changing di/dt, n or R visibly rescales the curve.
+    var pad = 48, xmax = 0.2, ymax = 0.012;
     var X = function (x) { return pad + (x / xmax) * (W - pad - 14); };
-    var Y = function (y) { return H - 28 - (y / ymax) * (H - 50); };
+    var Y = function (y) { return H - 28 - (Math.min(y, ymax * 1.04) / ymax) * (H - 50); };
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = css("--b-soft"); ctx.fillRect(X(0), 10, X(R) - X(0), H - 38);
     ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(W - 10, Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), 10); ctx.stroke();
     ctx.fillStyle = css("--muted"); ctx.font = "12px IBM Plex Mono, monospace";
     for (var t = 0; t <= 20; t += 5) { ctx.fillText(t + "cm", X(t / 100) - 10, H - 10); }
+    for (var mv = 0; mv <= 12; mv += 4) {
+      ctx.fillStyle = css("--muted"); ctx.fillText(mv + "", 8, Y(mv / 1000) + 4);
+      if (mv) { ctx.strokeStyle = css("--line"); ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(X(0), Y(mv / 1000)); ctx.lineTo(W - 10, Y(mv / 1000)); ctx.stroke(); ctx.setLineDash([]); }
+    }
     ctx.fillText("inside", X(R / 2) - 18, 26);
-    ctx.fillText("E", 10, 20);
+    ctx.fillText("E (mV/m)", X(0) + 6, 22);
+    if (Ef(R) > ymax) { ctx.fillStyle = css("--b"); ctx.fillText("↑ off scale", X(R) + 6, 22); }
     ctx.strokeStyle = css("--e"); ctx.lineWidth = 2.5; ctx.beginPath();
     for (var i = 0; i <= 300; i++) { var x = xmax * i / 300; var y = Ef(Math.max(x, 1e-6)); if (i === 0) ctx.moveTo(X(x), Y(y)); else ctx.lineTo(X(x), Y(y)); }
     ctx.stroke();
@@ -721,7 +727,8 @@ canvas { display: block; width: 100%; max-width: 100%; border-radius: 10px; back
     ctx.fillStyle = css("--b"); ctx.beginPath(); ctx.arc(X(r), Y(e), 5, 0, 7); ctx.fill();
     $("fread").innerHTML =
       '<div class="r"><small>Probe is</small>' + (r <= R ? "inside" : "outside") + '</div>' +
-      '<div class="r"><small>E at probe</small>' + plainSci(e) + ' V/m</div>' +
+      '<div class="r"><small>E at probe</small>' + (e * 1000).toFixed(2) + ' mV/m</div>' +
+      '<div class="r"><small>Peak E (at r = R)</small>' + (Ef(R) * 1000).toFixed(2) + ' mV/m</div>' +
       '<div class="r"><small>Formula used</small>' + (r <= R ? "μ₀ n r k / 2" : "μ₀ n R² k / 2r") + '</div>';
   }
   ["fR", "fk", "fn", "fr"].forEach(function (id) { $(id).addEventListener("input", drawFaraday); });
