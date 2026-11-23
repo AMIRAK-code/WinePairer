@@ -1,0 +1,1161 @@
+<title>EM Induction & Waves Exam Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
+<style>
+/* Layout: lab-notebook study kit. Sticky topic rail on wide screens, scrolling chip bar on phones.
+   E-field is always blue, B-field always orange, so every diagram reads the same way. */
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --ink: #16202e;
+  --muted: #5a6779;
+  --line: #d9e0ea;
+  --e: #1d5fd6;          /* electric field */
+  --b: #d9601a;          /* magnetic field */
+  --e-soft: #e6eefc;
+  --b-soft: #fcefe6;
+  --good: #1b8a4a;
+  --good-soft: #e3f4ea;
+  --bad: #c0352b;
+  --bad-soft: #fbe7e5;
+  --warn-soft: #fff6dc;
+  --warn-ink: #7a5600;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f141c; --surface: #171e29; --ink: #e5eaf2; --muted: #95a2b5; --line: #2a3443;
+    --e: #6ea0ff; --b: #ff9a5c; --e-soft: #1a2740; --b-soft: #35231a;
+    --good: #4cc983; --good-soft: #15301f; --bad: #ff7a70; --bad-soft: #3a1c1a;
+    --warn-soft: #33290f; --warn-ink: #f2cf72; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f141c; --surface: #171e29; --ink: #e5eaf2; --muted: #95a2b5; --line: #2a3443;
+  --e: #6ea0ff; --b: #ff9a5c; --e-soft: #1a2740; --b-soft: #35231a;
+  --good: #4cc983; --good-soft: #15301f; --bad: #ff7a70; --bad-soft: #3a1c1a;
+  --warn-soft: #33290f; --warn-ink: #f2cf72; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; text-wrap: balance; margin: 0; }
+a { color: var(--e); }
+button, input, select { font: inherit; }
+:focus-visible { outline: 3px solid var(--e); outline-offset: 2px; border-radius: 4px; }
+mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+
+/* Header */
+.top { padding-block: 36px 20px; display: grid; gap: 10px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.top h1 { font-size: clamp(30px, 5vw, 48px); font-weight: 800; letter-spacing: -.02em; }
+.top h1 .e { color: var(--e); } .top h1 .b { color: var(--b); }
+.top p { margin: 0; max-width: 68ch; color: var(--muted); }
+.progress { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.pill { font-family: var(--font-mono); font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+.pill strong { color: var(--ink); font-weight: 500; }
+
+/* Shell */
+.shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 2px; font-size: 14px; }
+.rail .group { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
+.rail a { text-decoration: none; color: var(--ink); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; gap: 8px; }
+.rail a:hover { background: var(--surface); }
+.rail a .qs { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+main { display: grid; gap: 28px; min-width: 0; }
+
+@media (max-width: 860px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; overflow-x: auto; gap: 6px; padding-block: 10px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .rail .group { display: none; }
+  .rail a { white-space: nowrap; background: var(--surface); border: 1px solid var(--line); padding: 5px 12px; }
+  .rail a .qs { display: none; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+}
+
+/* Sections */
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 26px clamp(16px, 3vw, 32px); display: grid; gap: 18px; scroll-margin-top: 70px; min-width: 0; }
+.sec-head { display: grid; gap: 6px; }
+.sec-head .tag { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+.sec-head h2 { font-size: clamp(22px, 3vw, 28px); font-weight: 700; }
+.sec-head p { margin: 0; color: var(--muted); max-width: 70ch; }
+h3 { font-size: 18px; font-weight: 700; margin-top: 4px; }
+p { margin: 0; }
+.prose { display: grid; gap: 10px; max-width: 72ch; }
+
+.formula { background: var(--e-soft); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+.formula.bfield { background: var(--b-soft); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.grid2 > * { min-width: 0; }
+
+.method { counter-reset: step; display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.method li { counter-increment: step; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; }
+.method li::before { content: counter(step); font-family: var(--font-mono); font-size: 13px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--surface); margin-top: 1px; }
+
+.trap { background: var(--warn-soft); color: var(--warn-ink); border-radius: 10px; padding: 12px 16px; display: grid; gap: 4px; }
+.trap b { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.trap ul { margin: 0; padding-left: 18px; }
+
+details.worked { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+details.worked > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; gap: 10px; align-items: baseline; }
+details.worked > summary::-webkit-details-marker { display: none; }
+details.worked > summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+details.worked[open] > summary::before { transform: rotate(90deg); }
+details.worked > summary .src { font-family: var(--font-mono); font-size: 12px; color: var(--e); font-weight: 500; }
+details.worked .body { padding: 0 16px 16px; display: grid; gap: 10px; }
+.ans { background: var(--good-soft); border-radius: 8px; padding: 10px 14px; }
+.ans b { color: var(--good); }
+
+table.tbl { border-collapse: collapse; width: 100%; font-size: 15px; }
+.tblwrap { overflow-x: auto; }
+table.tbl th, table.tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.tbl th { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+/* Widgets */
+.lab { border: 1px dashed var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 14px; }
+.lab-title { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.controls label { display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+.controls label span.v { font-family: var(--font-mono); color: var(--ink); }
+input[type=range] { width: 100%; accent-color: var(--e); }
+input[type=number], select { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
+.readout { display: flex; flex-wrap: wrap; gap: 10px; }
+.readout .r { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-family: var(--font-mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.readout .r small { display: block; font-family: var(--font-body); font-size: 12px; color: var(--muted); }
+canvas { display: block; width: 100%; max-width: 100%; border-radius: 10px; background: var(--bg); }
+.canvas-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; }
+@media (max-width: 640px) { .canvas-row { grid-template-columns: minmax(0, 1fr); } }
+.verdict { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+
+.btn { border: 1px solid var(--ink); background: var(--ink); color: var(--surface); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn:hover { filter: brightness(1.12); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* Quiz */
+.q { display: grid; gap: 12px; }
+.q .stem { font-size: 16px; }
+.q .meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+.opts { display: grid; gap: 8px; }
+.opt { text-align: left; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 10px; padding: 10px 14px; cursor: pointer; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: center; }
+.opt:hover:not([disabled]) { border-color: var(--e); }
+.opt .k { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt[disabled] { cursor: default; }
+.explain { border-left: 3px solid var(--e); padding: 4px 0 4px 14px; display: grid; gap: 8px; }
+.explain .hd { font-weight: 600; }
+.qnav { display: flex; flex-wrap: wrap; gap: 6px; }
+.qnav button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-family: var(--font-mono); font-size: 13px; cursor: pointer; }
+.qnav button.cur { border-color: var(--ink); border-width: 2px; }
+.qnav button.ok { background: var(--good-soft); border-color: var(--good); }
+.qnav button.no { background: var(--bad-soft); border-color: var(--bad); }
+.score { font-family: var(--font-display); font-size: 22px; font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 5px 12px; font-size: 14px; cursor: pointer; }
+.chip.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.streak { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+
+.sheet { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.sheet > div { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.sheet h4 { font-size: 14px; font-family: var(--font-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.const { font-family: var(--font-mono); font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Physics · Test Part 3 · 15 exam questions, 9 methods</div>
+    <h1>EM <span class="b">Induction</span> &amp; <span class="e">Waves</span> Exam Kit</h1>
+    <p>Every question from your 2021 test is broken into a reusable method. Each topic has the rule, the 30-second solving method, the traps the examiners use, your real exam question worked out, and endless fresh practice with new numbers.</p>
+    <div class="progress" id="progress"></div>
+  </header>
+
+  <div class="shell">
+    <nav class="rail" aria-label="Topics">
+      <div class="group">Start</div>
+      <a href="#cheatsheet">Formula sheet</a>
+      <div class="group">Induction</div>
+      <a href="#faraday">Induced E field <span class="qs">Q7</span></a>
+      <a href="#inductance">Mutual inductance <span class="qs">Q9</span></a>
+      <a href="#displacement">Displacement current <span class="qs">Q14</span></a>
+      <a href="#movingcharge">Moving charge B <span class="qs">Q10</span></a>
+      <div class="group">Waves</div>
+      <a href="#waveeq">Wave equation <span class="qs">Q5</span></a>
+      <a href="#spectrum">c = λf <span class="qs">Q6 Q12</span></a>
+      <a href="#ecb">E = cB <span class="qs">Q8 Q11</span></a>
+      <a href="#intensity">Intensity &amp; Poynting <span class="qs">Q3 Q4 Q13 Q15</span></a>
+      <a href="#polarization">Polarization <span class="qs">Q1 Q2</span></a>
+      <div class="group">Test yourself</div>
+      <a href="#practice">Endless practice</a>
+      <a href="#exam">Replay the 2021 test</a>
+    </nav>
+
+    <main>
+      <!-- CHEAT SHEET -->
+      <section class="card" id="cheatsheet">
+        <div class="sec-head">
+          <span class="tag">Memorise this page first</span>
+          <h2>One-screen formula sheet</h2>
+          <p>Almost every question on this test is one of these lines plus a unit conversion.</p>
+        </div>
+        <div class="sheet">
+          <div><h4>Constants</h4>
+            <div class="const">\(c = 3.0\times10^{8}\ \text{m/s}\)</div>
+            <div class="const">\(\mu_0 = 4\pi\times10^{-7}\ \text{T·m/A}\)</div>
+            <div class="const">\(\varepsilon_0 = 8.85\times10^{-12}\ \text{C}^2/\text{N·m}^2\)</div>
+            <div class="const">\(\mu_0 c \approx 377\ \Omega\) (shortcut)</div>
+          </div>
+          <div><h4>Induction</h4>
+            <div>\(\varepsilon = -\dfrac{d\Phi_B}{dt}\), \(\ \oint \vec E\cdot d\vec l = -\dfrac{d\Phi_B}{dt}\)</div>
+            <div>Solenoid: \(B = \mu_0 n i\)</div>
+            <div>Inside: \(E = \dfrac{\mu_0 n r}{2}\dfrac{di}{dt}\)</div>
+            <div>\(\Phi_{21} = M i_1\), \(\ \varepsilon_2 = -M\dfrac{di_1}{dt}\)</div>
+          </div>
+          <div><h4>Maxwell's correction</h4>
+            <div>\(I_d = \varepsilon_0 \dfrac{d\Phi_E}{dt}\), \(\ J_d = \varepsilon_0\dfrac{\partial E}{\partial t}\)</div>
+            <div>Capacitor: \(E = \dfrac{Q}{\varepsilon_0 A}\)</div>
+            <div>Moving charge: \(B = \dfrac{\mu_0}{4\pi}\dfrac{q v \sin\theta}{r^2}\)</div>
+          </div>
+          <div><h4>Wave basics</h4>
+            <div>\(\xi = f(x - vt) + g(x + vt)\)</div>
+            <div>\(c = \lambda f\), \(\ \omega = 2\pi f\), \(\ k = 2\pi/\lambda\)</div>
+            <div>\(E = cB\) (always, in vacuum)</div>
+          </div>
+          <div><h4>Energy</h4>
+            <div>\(S = \dfrac{EB}{\mu_0} = \dfrac{E^2}{\mu_0 c} = \dfrac{cB^2}{\mu_0}\)</div>
+            <div>\(I = \langle S\rangle = \dfrac{S_{max}}{2} = \dfrac{E_0^2}{2\mu_0 c} = \dfrac{c\varepsilon_0 E_0^2}{2}\)</div>
+            <div>Point source: \(I = \dfrac{P}{4\pi r^2}\)</div>
+            <div>Energy: \(U = I\,A\,\Delta t\)</div>
+          </div>
+          <div><h4>Polarization</h4>
+            <div>\(\Delta\varphi = 0\): linear at \(\arctan(E_2/E_1)\)</div>
+            <div>\(\Delta\varphi = \pi\): linear at \(180^\circ - \arctan(E_2/E_1)\)</div>
+            <div>\(\Delta\varphi = \pm\pi/2,\ E_1=E_2\): circular</div>
+            <div>anything else: elliptical</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FARADAY -->
+      <section class="card" id="faraday">
+        <div class="sec-head">
+          <span class="tag">Topic 1 · exam Q7</span>
+          <h2>Induced electric field (Faraday's law)</h2>
+          <p>A changing magnetic flux creates a circulating electric field, even in empty space with no wire.</p>
+        </div>
+        <div class="formula">\[\oint \vec E\cdot d\vec l = -\frac{d\Phi_B}{dt}\qquad\Rightarrow\qquad E\,(2\pi r) = \pi r^2\,\frac{dB}{dt}\]</div>
+        <h3>The method</h3>
+        <ol class="method">
+          <li><div>Draw a circle of radius \(r\) through point P, centred on the axis (symmetry makes \(E\) constant on it).</div></li>
+          <li><div>Left side: \(E \cdot 2\pi r\).</div></li>
+          <li><div>Right side: rate of flux through that circle. Inside the solenoid the area is \(\pi r^2\); outside it is only \(\pi R^2\) (field exists only inside).</div></li>
+          <li><div>Use \(B = \mu_0 n i\), so \(dB/dt = \mu_0 n\,di/dt\). Solve for \(E\).</div></li>
+        </ol>
+        <div class="grid2">
+          <div class="formula">Inside \((r&lt;R)\): \[E = \frac{\mu_0 n r}{2}\,\frac{di}{dt}\]</div>
+          <div class="formula">Outside \((r&gt;R)\): \[E = \frac{\mu_0 n R^2}{2r}\,\frac{di}{dt}\]</div>
+        </div>
+        <div class="trap"><b>Traps</b>
+          <ul>
+            <li>Only the <em>rate</em> \(di/dt\) matters. A constant part of the current (\(h_0\)) produces no induced field.</li>
+            <li>For a point inside, the solenoid radius \(R\) is not needed. "Cannot be determined" is a distractor.</li>
+            <li>\(\mu_0 n k \pi r^2\) is the flux rate, not the field. You still have to divide by \(2\pi r\).</li>
+          </ul>
+        </div>
+        <div class="lab">
+          <div class="lab-title">Lab · field profile E(r)</div>
+          <div class="controls">
+            <label>Solenoid radius R <span class="v" id="fR-v"></span><input type="range" id="fR" min="1" max="10" step="0.5" value="5"></label>
+            <label>Rate di/dt (A/s) <span class="v" id="fk-v"></span><input type="range" id="fk" min="1" max="100" step="1" value="40"></label>
+            <label>Turns per metre n <span class="v" id="fn-v"></span><input type="range" id="fn" min="500" max="5000" step="100" value="2000"></label>
+            <label>Probe distance r <span class="v" id="fr-v"></span><input type="range" id="fr" min="0.5" max="20" step="0.5" value="3"></label>
+          </div>
+          <canvas id="fcanvas" height="220"></canvas>
+          <div class="readout" id="fread"></div>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q7</span> Solenoid with \(i = h_0 + kt\)</summary>
+          <div class="body">
+            <p>An infinite solenoid with \(n\) turns per metre carries \(i = h_0 + kt\). Find \(E\) at distance \(r\) from the axis, inside.</p>
+            <p>\(di/dt = k\) (the \(h_0\) drops out). Faraday on a circle of radius \(r\):</p>
+            <div class="formula">\[E\,2\pi r = \pi r^2 \mu_0 n k \;\Rightarrow\; E = \frac{\mu_0 n k r}{2}\]</div>
+            <div class="ans"><b>Answer:</b> \(E = \dfrac{\mu_0 n k r}{2}\)</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- INDUCTANCE -->
+      <section class="card" id="inductance">
+        <div class="sec-head">
+          <span class="tag">Topic 2 · exam Q9</span>
+          <h2>Mutual and self inductance</h2>
+          <p>Inductance is a geometry number. It tells you how much flux one circuit gets per ampere in the other.</p>
+        </div>
+        <div class="grid2">
+          <div class="formula">\[M = \frac{\Phi_{21}}{i_1} = \frac{\Phi_{12}}{i_2}\qquad \varepsilon_2 = -M\frac{di_1}{dt}\]</div>
+          <div class="formula">\[L = \frac{\Phi}{i},\quad L_{sol} = \mu_0 n^2 A\ell,\quad U = \tfrac12 L i^2\]</div>
+        </div>
+        <div class="tblwrap"><table class="tbl">
+          <thead><tr><th>M or L depends on</th><th>M or L does NOT depend on</th></tr></thead>
+          <tbody>
+            <tr><td>Shape and size of each circuit</td><td>The current flowing</td></tr>
+            <tr><td>Distance between circuits</td><td>The rate of change of current</td></tr>
+            <tr><td>Relative orientation</td><td>Time</td></tr>
+            <tr><td>Medium in between (its \(\mu\))</td><td>The induced emf</td></tr>
+            <tr><td>Number of turns</td><td>Which circuit you call "1" (\(M_{12}=M_{21}\))</td></tr>
+          </tbody>
+        </table></div>
+        <div class="trap"><b>Why the current never matters</b><p>Flux is proportional to the current, so the ratio \(\Phi/i\) cancels it. Same logic as capacitance \(C = Q/V\), which does not depend on \(Q\).</p></div>
+        <details class="worked"><summary><span class="src">EXAM Q9</span> Mutual induction does NOT depend on…</summary>
+          <div class="body">
+            <p>Options: shape of circuits, distance, current intensity, medium. Shape, distance and medium all change how flux links the circuits. Current only scales flux and cancels in \(M=\Phi/i\).</p>
+            <div class="ans"><b>Answer:</b> the intensity of current flowing in the two circuits.</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- DISPLACEMENT -->
+      <section class="card" id="displacement">
+        <div class="sec-head">
+          <span class="tag">Topic 3 · exam Q14</span>
+          <h2>Displacement current</h2>
+          <p>Maxwell's term: a changing electric field acts like a current. If E inside a capacitor does not change, there is no displacement current.</p>
+        </div>
+        <div class="formula">\[I_d = \varepsilon_0\frac{d\Phi_E}{dt},\qquad J_d = \varepsilon_0\frac{\partial E}{\partial t},\qquad E_{cap} = \frac{\sigma}{\varepsilon_0} = \frac{Q}{\varepsilon_0 A}\]</div>
+        <h3>The method</h3>
+        <ol class="method">
+          <li><div>Ask: what is held fixed? Charge \(Q\) (isolated) or voltage \(V\) (battery connected)?</div></li>
+          <li><div>Write \(E\) using what's fixed: isolated → \(E = Q/(\varepsilon_0 A)\); battery → \(E = V/d\).</div></li>
+          <li><div>Check if \(E\) changes with time. \(J_d \propto dE/dt\).</div></li>
+        </ol>
+        <div class="tblwrap"><table class="tbl">
+          <thead><tr><th>Situation</th><th>E inside</th><th>Displacement current</th></tr></thead>
+          <tbody>
+            <tr><td>Isolated capacitor, plates pulled apart</td><td>\(Q/(\varepsilon_0 A)\): constant</td><td><b>Zero</b></td></tr>
+            <tr><td>Battery connected, plates pulled apart</td><td>\(V/d\): decreases</td><td>Non-zero</td></tr>
+            <tr><td>Capacitor charging with current \(I\)</td><td>grows</td><td>\(I_d = I\) (continuity)</td></tr>
+            <tr><td>Isolated capacitor, area changes</td><td>\(Q/(\varepsilon_0 A)\): changes</td><td>Non-zero</td></tr>
+          </tbody>
+        </table></div>
+        <div class="lab">
+          <div class="lab-title">Lab · pull the plates apart</div>
+          <div class="controls">
+            <label>Mode
+              <select id="dmode"><option value="iso">Isolated (Q fixed)</option><option value="bat">Battery (V fixed)</option></select>
+            </label>
+            <label>Plate gap d (mm) <span class="v" id="dd-v"></span><input type="range" id="dd" min="1" max="10" step="0.1" value="2"></label>
+          </div>
+          <canvas id="dcanvas" height="170"></canvas>
+          <div class="readout" id="dread"></div>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q14</span> Isolated charged capacitor, plates separating</summary>
+          <div class="body">
+            <p>Isolated means \(Q\) cannot change. Ignoring edge effects, \(E = \sigma/\varepsilon_0 = Q/(\varepsilon_0 A)\), which does not contain \(d\). So \(E\) is constant while the plates move, and \(J_d = \varepsilon_0\,\partial E/\partial t = 0\).</p>
+            <div class="ans"><b>Answer:</b> is zero.</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- MOVING CHARGE -->
+      <section class="card" id="movingcharge">
+        <div class="sec-head">
+          <span class="tag">Topic 4 · exam Q10</span>
+          <h2>Magnetic field of a moving charge</h2>
+          <p>Biot–Savart for one charge. Learn which "distance law" goes with which source; examiners swap them.</p>
+        </div>
+        <div class="formula bfield">\[\vec B = \frac{\mu_0}{4\pi}\,\frac{q\,\vec v\times\hat r}{r^2}\qquad |B| = \frac{\mu_0}{4\pi}\frac{|q| v\sin\theta}{r^2}\]</div>
+        <p>So \(B\) is proportional to \(q\), to \(v\), depends on direction through \(\sin\theta\) (zero straight ahead or behind), and falls as \(1/r^2\).</p>
+        <div class="tblwrap"><table class="tbl">
+          <thead><tr><th>Source</th><th>Field falls as</th></tr></thead>
+          <tbody>
+            <tr><td>Point charge (E) / moving point charge (B)</td><td>\(1/r^2\)</td></tr>
+            <tr><td>Infinite straight wire (B) / infinite line charge (E)</td><td>\(1/r\)</td></tr>
+            <tr><td>Infinite plane / inside ideal solenoid</td><td>constant</td></tr>
+            <tr><td>Dipole (electric or magnetic), far away</td><td>\(1/r^3\)</td></tr>
+            <tr><td>Point-source EM wave: intensity / amplitude</td><td>\(1/r^2\) / \(1/r\)</td></tr>
+          </tbody>
+        </table></div>
+        <details class="worked"><summary><span class="src">EXAM Q10</span> Field of a moving (non-relativistic) charge</summary>
+          <div class="body">
+            <p>Check each option: depends on direction (through \(\vec v\times\hat r\)) so "does not depend on direction" is false; depends on \(q\) so "does not depend on charge" is false; \(1/r\) is the wire law, not the point-charge law.</p>
+            <div class="ans"><b>Answer:</b> inversely proportional to the square of the distance.</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- WAVE EQUATION -->
+      <section class="card" id="waveeq">
+        <div class="sec-head">
+          <span class="tag">Topic 5 · exam Q5</span>
+          <h2>Solutions of the wave equation</h2>
+          <p>\(\dfrac{\partial^2\xi}{\partial x^2} = \dfrac{1}{v^2}\dfrac{\partial^2\xi}{\partial t^2}\) is solved by any shape that slides at speed \(v\).</p>
+        </div>
+        <div class="formula">\[\xi(x,t) = f(x - vt) + g(x + vt)\]</div>
+        <h3>The 5-second test</h3>
+        <ol class="method">
+          <li><div>Look inside every function. Is the argument built only from the combination \(x - vt\) (or only \(x + vt\))?</div></li>
+          <li><div>A constant multiple is fine: \(f[2(x-vt)]\), \(\sin(kx - \omega t) = \sin[k(x - vt)]\) with \(v=\omega/k\).</div></li>
+          <li><div>Squares on only one variable break it: \(x^2 - vt\), \(x - vt^2\), \(x^2 - vt^2\) are <b>not</b> waves.</div></li>
+          <li><div>Sums of valid pieces are valid (the equation is linear).</div></li>
+        </ol>
+        <div class="lab">
+          <div class="lab-title">Drill · wave or not?</div>
+          <div id="wdrill" class="q"></div>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q5</span> Which is a solution?</summary>
+          <div class="body">
+            <p>\(f_1(x^2 - vt^2)\) ✗, \(f_1(x - vt^2) + f_2(x + vt^2)\) ✗, \(f_1(x^2 - vt)\) ✗, \(f_1(x - vt) + f_2[2(x - vt)]\) ✓. The last one: both pieces are functions of \(u = x - vt\) only.</p>
+            <div class="ans"><b>Answer:</b> \(\xi = f_1(x - vt) + f_2[2(x - vt)]\)</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- SPECTRUM -->
+      <section class="card" id="spectrum">
+        <div class="sec-head">
+          <span class="tag">Topic 6 · exam Q6, Q12</span>
+          <h2>Wavelength, frequency and speed</h2>
+          <p>In vacuum every EM wave travels at \(c\). Short wavelength means high frequency.</p>
+        </div>
+        <div class="formula">\[f = \frac{c}{\lambda}\qquad 1\ \text{nm} = 10^{-9}\ \text{m}\]</div>
+        <div class="lab">
+          <div class="lab-title">Lab · visible light</div>
+          <div class="controls">
+            <label>Wavelength λ <span class="v" id="sl-v"></span><input type="range" id="sl" min="380" max="750" step="1" value="550"></label>
+          </div>
+          <canvas id="scanvas" height="70"></canvas>
+          <div class="readout" id="sread"></div>
+        </div>
+        <div class="trap"><b>Traps</b>
+          <ul>
+            <li>"Highest frequency" means use the <em>shortest</em> wavelength (400 nm, violet).</li>
+            <li>Forgetting the \(10^{-9}\) gives answers like \(3\times10^{8}\) or \(10^{20}\) Hz. Visible light is always about \(4\text{–}7.5\times10^{14}\) Hz; use that as a sanity check.</li>
+            <li>Speed in vacuum is the same for all colours. Any option saying red is "faster" or "slower" in vacuum is wrong.</li>
+          </ul>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q6</span> Highest visible frequency</summary>
+          <div class="body">
+            <p>\(f_{max} = c/\lambda_{min} = 3.0\times10^8 / 400\times10^{-9} = 7.5\times10^{14}\) Hz.</p>
+            <div class="ans"><b>Answer:</b> \(7.5\times10^{14}\) Hz</div>
+          </div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q12</span> Red (700 nm) vs violet (400 nm)</summary>
+          <div class="body">
+            <p>Red: longer λ, so <em>lower</em> frequency. Same speed \(c\). The options all claim different speeds or higher frequency, so none fits.</p>
+            <div class="ans"><b>Answer:</b> None of the others.</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- E = cB -->
+      <section class="card" id="ecb">
+        <div class="sec-head">
+          <span class="tag">Topic 7 · exam Q8, Q11</span>
+          <h2>Linking E and B: E = cB</h2>
+          <p>In a plane EM wave in vacuum, E and B are in phase, perpendicular, and their magnitudes are locked together.</p>
+        </div>
+        <div class="formula">\[E = cB\qquad B = \frac{E}{c}\qquad (E_0 = cB_0\ \text{for amplitudes too})\]</div>
+        <div class="trap"><b>Unit traps</b>
+          <ul>
+            <li>N/C and V/m are the same unit.</li>
+            <li>\(1\ \mu\text{T} = 10^{-6}\ \text{T}\). Typical answers: hundreds of N/C ↔ a few µT.</li>
+            <li>If you get \(\mu\text{N/C}\) for E, you divided by \(c\) instead of multiplying.</li>
+          </ul>
+        </div>
+        <div class="lab">
+          <div class="lab-title">Converter</div>
+          <div class="controls">
+            <label>E (N/C) <input type="number" id="ce" value="570" step="any"></label>
+            <label>B (µT) <input type="number" id="cb" value="1.9" step="any"></label>
+          </div>
+          <p class="streak">Type in either box; the other updates.</p>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q8</span> E = 570 N/C, find B</summary>
+          <div class="body"><p>\(B = 570 / 3.0\times10^8 = 1.90\times10^{-6}\) T.</p><div class="ans"><b>Answer:</b> 1.90 µT</div></div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q11</span> B = 2.12 µT, find E</summary>
+          <div class="body"><p>\(E = cB = 3.0\times10^8 \times 2.12\times10^{-6} = 636\) N/C.</p><div class="ans"><b>Answer:</b> 636 N/C</div></div>
+        </details>
+      </section>
+
+      <!-- INTENSITY -->
+      <section class="card" id="intensity">
+        <div class="sec-head">
+          <span class="tag">Topic 8 · exam Q3, Q4, Q13, Q15 · 4 of 15 questions</span>
+          <h2>Intensity and the Poynting vector</h2>
+          <p>The highest-value topic on this test. Learn the chain: power → intensity → amplitude.</p>
+        </div>
+        <div class="formula">\[S_{max} = \frac{E_0B_0}{\mu_0} = \frac{cB_0^2}{\mu_0} = \frac{E_0^2}{\mu_0 c}\qquad I = \langle S\rangle = \frac{S_{max}}{2} = \frac{E_0^2}{2\mu_0 c}\]</div>
+        <h3>The chain for point sources</h3>
+        <ol class="method">
+          <li><div>Isotropic source of power \(P\): energy spreads over a sphere, so \(I = P/(4\pi r^2)\).</div></li>
+          <li><div>Invert \(I = E_0^2/(2\mu_0 c)\): \(E_0 = \sqrt{2\mu_0 c\, I} \approx \sqrt{754\, I}\).</div></li>
+          <li><div>If they ask for \(B_0\): divide by \(c\).</div></li>
+        </ol>
+        <h3>Energy on a surface</h3>
+        <ol class="method">
+          <li><div>"Average Poynting vector" = intensity \(I\) (already averaged, no extra ½).</div></li>
+          <li><div>\(U = I \times A \times \Delta t\). Convert minutes to seconds. If the surface is tilted, multiply by \(\cos\theta\).</div></li>
+        </ol>
+        <div class="trap"><b>Traps</b>
+          <ul>
+            <li>"Maximum" Poynting → no ½. "Average" or "intensity" → with ½.</li>
+            <li>Sphere area is \(4\pi r^2\), not \(4\pi r\) or \(\pi r^2\).</li>
+            <li>Using \(I = E_0^2/(\mu_0 c)\) (no 2) gives the rms field \(E_0/\sqrt2\): a classic wrong option.</li>
+          </ul>
+        </div>
+        <div class="lab">
+          <div class="lab-title">Calculator · point source</div>
+          <div class="controls">
+            <label>Power P (W) <input type="number" id="pP" value="1500" step="any"></label>
+            <label>Distance r (m) <input type="number" id="pr" value="3" step="any"></label>
+          </div>
+          <div class="readout" id="pread"></div>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q4</span> 1500 W at 3 m</summary>
+          <div class="body">
+            <p>\(I = 1500 / (4\pi\cdot 9) = 13.26\) W/m². \(E_0 = \sqrt{2\cdot 377\cdot 13.26} = \sqrt{10\,000} = 100\) V/m.</p>
+            <div class="ans"><b>Answer:</b> 100 V/m</div>
+          </div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q13</span> 240 W at 2 m</summary>
+          <div class="body">
+            <p>\(I = 240 / (4\pi\cdot 4) = 4.77\) W/m². \(E_0 = \sqrt{754\cdot 4.77} = \sqrt{3600} = 60\) V/m.</p>
+            <div class="ans"><b>Answer:</b> 60 V/m</div>
+          </div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q3</span> Energy on a 1.5 m × 2.0 m area in 1 minute</summary>
+          <div class="body">
+            <p>\(\langle S\rangle = 0.939\) W/m² is already the average. \(U = 0.939 \times (1.5\times2.0) \times 60 = 169\) J.</p>
+            <div class="ans"><b>Answer:</b> 170 J</div>
+          </div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q15</span> \(B_0 = 2\times10^{-6}\) T, find \(S_{max}\)</summary>
+          <div class="body">
+            <p>\(S_{max} = cB_0^2/\mu_0 = 3\times10^8 \cdot 4\times10^{-12} / (4\pi\times10^{-7}) = 955.8\) W/m². The option 478 is the average (half), a trap.</p>
+            <div class="ans"><b>Answer:</b> 955.8 W/m²</div>
+          </div>
+        </details>
+      </section>
+
+      <!-- POLARIZATION -->
+      <section class="card" id="polarization">
+        <div class="sec-head">
+          <span class="tag">Topic 9 · exam Q1, Q2</span>
+          <h2>Polarization</h2>
+          <p>Follow the tip of \(\vec E\) at a fixed point. Its path is a line, a circle or an ellipse.</p>
+        </div>
+        <div class="formula">\[\vec E = E_1\cos(kz-\omega t)\,\hat x + E_2\cos(kz-\omega t+\varphi)\,\hat y\]</div>
+        <h3>The method</h3>
+        <ol class="method">
+          <li><div>Read off the phase difference \(\varphi\) between the y and x components.</div></li>
+          <li><div>\(\varphi = 0\): \(E_y/E_x = +E_2/E_1\), a line at \(\arctan(E_2/E_1)\). With \(E_1 = E_2\): 45°.</div></li>
+          <li><div>\(\varphi = \pi\): \(E_y/E_x = -E_2/E_1\), a line at \(180^\circ - \arctan(E_2/E_1)\). With \(E_1 = E_2\): 135°.</div></li>
+          <li><div>\(\varphi = \pm\pi/2\) and \(E_1 = E_2\): circle. Any other case: ellipse.</div></li>
+          <li><div>Rotation sense: set \(z = 0\), check the tip at \(t=0\) and a moment later. With this form, looking from \(+z\) toward the origin, \(\varphi = +\pi/2\) turns counterclockwise and \(\varphi = -\pi/2\) clockwise.</div></li>
+        </ol>
+        <div class="lab">
+          <div class="lab-title">Lab · trace the tip of E (seen from +z, looking at the origin)</div>
+          <div class="controls">
+            <label>\(E_1\) <span class="v" id="pe1-v"></span><input type="range" id="pe1" min="0" max="1" step="0.05" value="1"></label>
+            <label>\(E_2\) <span class="v" id="pe2-v"></span><input type="range" id="pe2" min="0" max="1" step="0.05" value="1"></label>
+            <label>Phase φ <span class="v" id="pph-v"></span><input type="range" id="pph" min="-180" max="180" step="15" value="180"></label>
+          </div>
+          <div class="btnrow" id="phpresets"></div>
+          <div class="canvas-row">
+            <canvas id="pcanvas" width="320" height="320"></canvas>
+            <div class="prose">
+              <div class="verdict" id="pverdict"></div>
+              <p id="pwhy" class="streak"></p>
+            </div>
+          </div>
+        </div>
+        <div class="trap"><b>Definition trap (Q2)</b>
+          <ul>
+            <li><b>Linearly polarized</b> = the plane of oscillation of \(\vec E\) (and of \(\vec B\)) stays fixed in time.</li>
+            <li>"E and B perpendicular to propagation" is true for <em>every</em> plane EM wave, so it does not define linear polarization.</li>
+            <li>E and B in vacuum are in phase, never out of phase by \(\pi/2\), and never parallel.</li>
+          </ul>
+        </div>
+        <details class="worked"><summary><span class="src">EXAM Q1</span> \(E_2 = E_1\), phase \(\pi\)</summary>
+          <div class="body">
+            <p>Real parts: \(E_x = E_1\cos(kz-\omega t)\), \(E_y = E_1\cos(kz-\omega t+\pi) = -E_x\). The tip moves along \(y = -x\): a straight line at 135° from +x.</p>
+            <div class="ans"><b>Answer:</b> straight at 135° with respect to the +x axis.</div>
+          </div>
+        </details>
+        <details class="worked"><summary><span class="src">EXAM Q2</span> Definition of linear polarization</summary>
+          <div class="body"><div class="ans"><b>Answer:</b> the plane of oscillation of the electric field and that of the magnetic field remain constant over time.</div></div>
+        </details>
+      </section>
+
+      <!-- PRACTICE -->
+      <section class="card" id="practice">
+        <div class="sec-head">
+          <span class="tag">Unlimited · new numbers every time</span>
+          <h2>Endless practice</h2>
+          <p>Questions built like your exam, with wrong options made from the usual mistakes. Every answer shows the full method.</p>
+        </div>
+        <div class="chips" id="pchips"></div>
+        <div class="streak" id="pstats"></div>
+        <div class="q" id="pq"></div>
+      </section>
+
+      <!-- EXAM -->
+      <section class="card" id="exam">
+        <div class="sec-head">
+          <span class="tag">The real 15 questions · 2 points each</span>
+          <h2>Replay the 2021 test</h2>
+          <p>Answer, check, read the method. Your score shows at the bottom.</p>
+        </div>
+        <div class="qnav" id="enav"></div>
+        <div class="q" id="eq"></div>
+        <div class="btnrow">
+          <button class="btn ghost" id="eprev">← Previous</button>
+          <button class="btn" id="enext">Next →</button>
+          <button class="btn ghost" id="ereset">Restart test</button>
+          <span class="score" id="escore"></span>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var C = 3e8, MU0 = 4 * Math.PI * 1e-7, EPS0 = 8.85e-12;
+
+  /* ---------- helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function typeset(el) {
+    if (window.MathJax && MathJax.typesetPromise) {
+      if (MathJax.typesetClear) { try { MathJax.typesetClear([el]); } catch (e) {} }
+      MathJax.typesetPromise([el]).catch(function () {});
+    }
+  }
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function ri(a, b) { return Math.floor(rnd(a, b + 1)); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function sig(x, n) { n = n || 3; if (x === 0) return "0"; return Number(x.toPrecision(n)).toString(); }
+  function sci(x, n) {
+    n = n || 3;
+    if (!isFinite(x)) return "\\infty";
+    if (x === 0) return "0";
+    var e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 3) return String(Number(x.toPrecision(n)));
+    var ms = (x / Math.pow(10, e)).toFixed(n - 1);
+    if (Math.abs(parseFloat(ms)) >= 10) { e += 1; ms = (x / Math.pow(10, e)).toFixed(n - 1); }
+    return ms + "\\times10^{" + e + "}";
+  }
+  function plainSci(x, n) {
+    n = n || 3;
+    var e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 3) return x.toPrecision(n);
+    return (x / Math.pow(10, e)).toFixed(n - 1) + "e" + e;
+  }
+  function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+  function setupCanvas(cv, h) {
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth || 600;
+    cv.width = w * dpr; cv.height = h * dpr; cv.style.height = h + "px";
+    var ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx: ctx, w: w, h: h };
+  }
+  function arrow(ctx, x1, y1, x2, y2, col, lw) {
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw || 2;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    var a = Math.atan2(y2 - y1, x2 - x1), s = 8;
+    ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - s * Math.cos(a - 0.4), y2 - s * Math.sin(a - 0.4));
+    ctx.lineTo(x2 - s * Math.cos(a + 0.4), y2 - s * Math.sin(a + 0.4));
+    ctx.closePath(); ctx.fill();
+  }
+
+  /* ---------- Faraday lab ---------- */
+  function drawFaraday() {
+    var R = +$("fR").value / 100, k = +$("fk").value, n = +$("fn").value, r = +$("fr").value / 100;
+    $("fR-v").textContent = (R * 100).toFixed(1) + " cm";
+    $("fk-v").textContent = k + " A/s";
+    $("fn-v").textContent = n;
+    $("fr-v").textContent = (r * 100).toFixed(1) + " cm";
+    function Ef(x) { return x <= R ? MU0 * n * k * x / 2 : MU0 * n * k * R * R / (2 * x); }
+    var g = setupCanvas($("fcanvas"), 220), ctx = g.ctx, W = g.w, H = g.h;
+    var pad = 40, xmax = 0.2, ymax = MU0 * n * k * R / 2 * 1.2;
+    var X = function (x) { return pad + (x / xmax) * (W - pad - 14); };
+    var Y = function (y) { return H - 28 - (y / ymax) * (H - 50); };
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = css("--b-soft"); ctx.fillRect(X(0), 10, X(R) - X(0), H - 38);
+    ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(W - 10, Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), 10); ctx.stroke();
+    ctx.fillStyle = css("--muted"); ctx.font = "12px IBM Plex Mono, monospace";
+    for (var t = 0; t <= 20; t += 5) { ctx.fillText(t + "cm", X(t / 100) - 10, H - 10); }
+    ctx.fillText("inside", X(R / 2) - 18, 26);
+    ctx.fillText("E", 10, 20);
+    ctx.strokeStyle = css("--e"); ctx.lineWidth = 2.5; ctx.beginPath();
+    for (var i = 0; i <= 300; i++) { var x = xmax * i / 300; var y = Ef(Math.max(x, 1e-6)); if (i === 0) ctx.moveTo(X(x), Y(y)); else ctx.lineTo(X(x), Y(y)); }
+    ctx.stroke();
+    var e = Ef(r);
+    ctx.fillStyle = css("--b"); ctx.beginPath(); ctx.arc(X(r), Y(e), 5, 0, 7); ctx.fill();
+    $("fread").innerHTML =
+      '<div class="r"><small>Probe is</small>' + (r <= R ? "inside" : "outside") + '</div>' +
+      '<div class="r"><small>E at probe</small>' + plainSci(e) + ' V/m</div>' +
+      '<div class="r"><small>Formula used</small>' + (r <= R ? "μ₀ n r k / 2" : "μ₀ n R² k / 2r") + '</div>';
+  }
+  ["fR", "fk", "fn", "fr"].forEach(function (id) { $(id).addEventListener("input", drawFaraday); });
+
+  /* ---------- Displacement lab ---------- */
+  var dPrev = null;
+  function drawDisp() {
+    var mode = $("dmode").value, d = +$("dd").value;
+    $("dd-v").textContent = d.toFixed(1) + " mm";
+    var Q = 1, V = 1;
+    var E = mode === "iso" ? 1 : 2 / d; // relative units: battery case normalised at d=2
+    var g = setupCanvas($("dcanvas"), 170), ctx = g.ctx, W = g.w, H = g.h;
+    ctx.clearRect(0, 0, W, H);
+    var cx = W / 2, gap = d * Math.min(22, (W - 80) / 22);
+    var x1 = cx - gap / 2, x2 = cx + gap / 2;
+    ctx.fillStyle = css("--ink"); ctx.fillRect(x1 - 6, 20, 6, 130); ctx.fillRect(x2, 20, 6, 130);
+    ctx.fillStyle = css("--muted"); ctx.font = "13px IBM Plex Mono, monospace";
+    ctx.fillText("+", x1 - 20, 90); ctx.fillText("−", x2 + 12, 90);
+    var lines = Math.max(2, Math.round(7 * E));
+    for (var i = 0; i < lines; i++) {
+      var y = 30 + (i + 0.5) * (110 / lines);
+      if (gap > 16) arrow(ctx, x1 + 3, y, x2 - 4, y, css("--e"), 1.5);
+    }
+    var change = dPrev === null ? 0 : E - dPrev.E;
+    dPrev = { E: E };
+    $("dread").innerHTML =
+      '<div class="r"><small>Held fixed</small>' + (mode === "iso" ? "Q" : "V") + '</div>' +
+      '<div class="r"><small>E inside</small>' + (mode === "iso" ? "Q/(ε₀A): independent of d" : "V/d: drops as d grows") + '</div>' +
+      '<div class="r"><small>J_d while moving</small>' + (mode === "iso" ? "0" : "≠ 0") + '</div>';
+  }
+  $("dmode").addEventListener("change", function () { dPrev = null; drawDisp(); });
+  $("dd").addEventListener("input", drawDisp);
+
+  /* ---------- Spectrum lab ---------- */
+  function wl2rgb(l) {
+    var r = 0, g = 0, b = 0;
+    if (l < 440) { r = -(l - 440) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; }
+    else if (l < 510) { g = 1; b = -(l - 510) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; }
+    else if (l < 645) { r = 1; g = -(l - 645) / 65; } else { r = 1; }
+    var f = l < 420 ? 0.3 + 0.7 * (l - 380) / 40 : l > 700 ? 0.3 + 0.7 * (750 - l) / 50 : 1;
+    return "rgb(" + [r, g, b].map(function (v) { return Math.round(255 * Math.pow(v * f, 0.8)); }).join(",") + ")";
+  }
+  function drawSpec() {
+    var l = +$("sl").value; $("sl-v").textContent = l + " nm";
+    var g = setupCanvas($("scanvas"), 70), ctx = g.ctx, W = g.w;
+    for (var x = 0; x < W; x++) { ctx.fillStyle = wl2rgb(380 + 370 * x / W); ctx.fillRect(x, 10, 1, 36); }
+    var px = (l - 380) / 370 * W;
+    ctx.fillStyle = css("--ink"); ctx.fillRect(px - 1.5, 4, 3, 48);
+    ctx.font = "12px IBM Plex Mono, monospace"; ctx.fillStyle = css("--muted");
+    ctx.fillText("380 nm · violet · high f", 2, 64); var t = "red · low f · 750 nm"; ctx.fillText(t, W - ctx.measureText(t).width - 2, 64);
+    var f = C / (l * 1e-9);
+    $("sread").innerHTML = '<div class="r"><small>f = c/λ</small>' + plainSci(f) + ' Hz</div><div class="r"><small>Speed in vacuum</small>3.0e8 m/s (same for all)</div>';
+  }
+  $("sl").addEventListener("input", drawSpec);
+
+  /* ---------- E = cB converter ---------- */
+  $("ce").addEventListener("input", function () { var v = parseFloat(this.value); if (isFinite(v)) $("cb").value = +(v / C * 1e6).toPrecision(4); });
+  $("cb").addEventListener("input", function () { var v = parseFloat(this.value); if (isFinite(v)) $("ce").value = +(v * 1e-6 * C).toPrecision(4); });
+
+  /* ---------- Point source calculator ---------- */
+  function calcPoint() {
+    var P = parseFloat($("pP").value), r = parseFloat($("pr").value);
+    if (!(P > 0 && r > 0)) { $("pread").innerHTML = '<div class="r">Enter a positive power and distance.</div>'; return; }
+    var I = P / (4 * Math.PI * r * r), E0 = Math.sqrt(2 * MU0 * C * I), B0 = E0 / C;
+    $("pread").innerHTML =
+      '<div class="r"><small>I = P/4πr²</small>' + plainSci(I) + ' W/m²</div>' +
+      '<div class="r"><small>E₀ = √(2μ₀cI)</small>' + plainSci(E0) + ' V/m</div>' +
+      '<div class="r"><small>B₀ = E₀/c</small>' + plainSci(B0) + ' T</div>' +
+      '<div class="r"><small>S_max = 2I</small>' + plainSci(2 * I) + ' W/m²</div>' +
+      '<div class="r"><small>E_rms (trap)</small>' + plainSci(E0 / Math.SQRT2) + ' V/m</div>';
+  }
+  $("pP").addEventListener("input", calcPoint); $("pr").addEventListener("input", calcPoint);
+
+  /* ---------- Polarization lab ---------- */
+  function classifyPol(E1, E2, phDeg) {
+    var ph = ((phDeg % 360) + 540) % 360 - 180; // -180..180
+    var eps = 1e-9;
+    if (E1 < eps && E2 < eps) return { kind: "No wave", why: "Both amplitudes are zero." };
+    if (E1 < eps) return { kind: "Linear along y (90°)", why: "Only the y component exists." };
+    if (E2 < eps) return { kind: "Linear along x (0°)", why: "Only the x component exists." };
+    var ang = Math.atan2(E2, E1) * 180 / Math.PI;
+    if (Math.abs(ph) < eps) return { kind: "Linear at " + ang.toFixed(0) + "°", why: "φ = 0: Ey/Ex = +E₂/E₁ at every instant, a fixed line through the first and third quadrants." };
+    if (Math.abs(Math.abs(ph) - 180) < eps) return { kind: "Linear at " + (180 - ang).toFixed(0) + "°", why: "φ = π: Ey = −(E₂/E₁)Ex, a fixed line through the second and fourth quadrants." };
+    var sense = ph > 0 ? "counterclockwise" : "clockwise";
+    if (Math.abs(Math.abs(ph) - 90) < eps && Math.abs(E1 - E2) < 1e-6) return { kind: "Circular, " + sense, why: "φ = ±π/2 and equal amplitudes. The sign of φ sets the turning sense (φ > 0 → counterclockwise from +z)." };
+    return { kind: "Elliptical, " + sense, why: "φ is not 0 or π, and it is not the equal-amplitude ±π/2 case, so the tip traces an ellipse." };
+  }
+  var polT = 0, polRAF = null;
+  function polFrame() {
+    var E1 = +$("pe1").value, E2 = +$("pe2").value, ph = +$("pph").value;
+    $("pe1-v").textContent = E1.toFixed(2); $("pe2-v").textContent = E2.toFixed(2);
+    $("pph-v").textContent = ph + "° (" + (ph / 180).toFixed(2).replace(/\.?0+$/, "") + "π)";
+    var cv = $("pcanvas"), size = Math.min(cv.clientWidth || 320, 360);
+    var g = setupCanvas(cv, size), ctx = g.ctx, W = g.w, H = size;
+    var cx = W / 2, cy = H / 2, s = Math.min(W, H) * 0.38;
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(10, cy); ctx.lineTo(W - 10, cy); ctx.moveTo(cx, 10); ctx.lineTo(cx, H - 10); ctx.stroke();
+    ctx.fillStyle = css("--muted"); ctx.font = "12px IBM Plex Mono, monospace";
+    ctx.fillText("+x", W - 26, cy - 6); ctx.fillText("+y", cx + 6, 20); ctx.fillText("z toward you", 10, H - 10);
+    var phr = ph * Math.PI / 180;
+    ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]); ctx.beginPath();
+    for (var i = 0; i <= 200; i++) { var wt = 2 * Math.PI * i / 200; var ex = E1 * Math.cos(-wt), ey = E2 * Math.cos(-wt + phr); var X = cx + ex * s, Y = cy - ey * s; if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y); }
+    ctx.stroke(); ctx.setLineDash([]);
+    var ex0 = E1 * Math.cos(-polT), ey0 = E2 * Math.cos(-polT + phr);
+    // trail
+    for (var j = 1; j <= 25; j++) {
+      var tt = polT - j * 0.06; var ax = E1 * Math.cos(-tt), ay = E2 * Math.cos(-tt + phr);
+      ctx.fillStyle = css("--e"); ctx.globalAlpha = 0.5 * (1 - j / 25);
+      ctx.beginPath(); ctx.arc(cx + ax * s, cy - ay * s, 3, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (Math.hypot(ex0, ey0) > 0.02) arrow(ctx, cx, cy, cx + ex0 * s, cy - ey0 * s, css("--e"), 3);
+    ctx.fillStyle = css("--e"); ctx.fillText("E", cx + ex0 * s + 6, cy - ey0 * s - 6);
+    var cl = classifyPol(E1, E2, ph);
+    $("pverdict").textContent = cl.kind; $("pwhy").textContent = cl.why;
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) { polT += 0.035; polRAF = requestAnimationFrame(polFrame); }
+  }
+  function polRestart() { if (polRAF) cancelAnimationFrame(polRAF); polFrame(); }
+  ["pe1", "pe2", "pph"].forEach(function (id) { $(id).addEventListener("input", polRestart); });
+  [["Exam Q1: E₁=E₂, φ=π", 1, 1, 180], ["φ = 0", 1, 1, 0], ["Circular +π/2", 1, 1, 90], ["Circular −π/2", 1, 1, -90], ["Elliptical", 1, 0.5, 90]].forEach(function (p) {
+    var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = p[0];
+    b.addEventListener("click", function () { $("pe1").value = p[1]; $("pe2").value = p[2]; $("pph").value = p[3]; polRestart(); });
+    $("phpresets").appendChild(b);
+  });
+
+  /* ---------- MCQ renderer ---------- */
+  function renderMCQ(host, item, onAnswer, preAnswered) {
+    host.innerHTML = "";
+    var stem = document.createElement("div"); stem.className = "stem"; stem.innerHTML = item.q; host.appendChild(stem);
+    var opts = document.createElement("div"); opts.className = "opts"; host.appendChild(opts);
+    var exp = document.createElement("div"); exp.className = "explain"; exp.hidden = true; host.appendChild(exp);
+    var btns = item.options.map(function (o, i) {
+      var b = document.createElement("button"); b.className = "opt"; b.type = "button";
+      b.innerHTML = '<span class="k">' + "ABCD"[i] + '</span><span>' + o + '</span>';
+      b.addEventListener("click", function () { choose(i, true); });
+      opts.appendChild(b); return b;
+    });
+    function choose(i, fresh) {
+      btns.forEach(function (b, j) { b.disabled = true; if (j === item.correct) b.classList.add("right"); else if (j === i) b.classList.add("wrong"); });
+      var ok = i === item.correct;
+      exp.innerHTML = '<div class="hd" style="color:var(' + (ok ? "--good" : "--bad") + ')">' + (ok ? "Correct." : "Not quite. Correct answer: " + "ABCD"[item.correct] + ".") + '</div>' + item.why;
+      exp.hidden = false; typeset(host);
+      if (fresh && onAnswer) onAnswer(ok, i);
+    }
+    if (preAnswered !== undefined && preAnswered !== null) choose(preAnswered, false);
+    typeset(host);
+  }
+
+  /* ---------- Wave drill ---------- */
+  var waveItems = [
+    ["\\sin(kx - \\omega t)", true, "\\(= \\sin[k(x - vt)]\\) with \\(v = \\omega/k\\)."],
+    ["e^{-(x+vt)^2}", true, "A function of \\(x + vt\\) only: a pulse moving toward −x."],
+    ["f(x - vt) + g(x + vt)", true, "The general solution."],
+    ["\\cos[3(x - vt)]", true, "A constant multiple of \\(x - vt\\) is fine."],
+    ["(x - vt)^3", true, "Any function of \\(x - vt\\), even a polynomial."],
+    ["\\sin(x^2 - vt)", false, "\\(x^2\\) but \\(t\\) to the first power: not of the form \\(x \\pm vt\\)."],
+    ["f(x - vt^2)", false, "\\(t^2\\) breaks the combination."],
+    ["f(x^2 - v^2t^2)", false, "\\(x^2 - v^2t^2 = (x-vt)(x+vt)\\) mixes both directions; not a solution in general."],
+    ["\\sin(kx)\\,e^{-t}", false, "Decays in time without moving; fails the equation."],
+    ["\\sin(kx)\\cos(\\omega t)", true, "A standing wave = sum of two travelling waves; it is a solution (with \\(\\omega = kv\\))."],
+    ["x\\,t", false, "Not of the form \\(f(x\\pm vt)\\)… but check: second derivatives are both zero, so it does satisfy the equation. Exam answers still expect \\(f(x \\pm vt)\\) form; treat with care."]
+  ];
+  waveItems.pop(); // remove the tricky edge case to keep the drill clean
+  var wIdx = 0, wScore = 0, wTot = 0, wOrder = shuffle(waveItems.map(function (_, i) { return i; }));
+  function showWave() {
+    var it = waveItems[wOrder[wIdx % wOrder.length]];
+    var host = $("wdrill");
+    host.innerHTML = '<div class="stem">Is \\(\\xi(x,t) = ' + it[0] + '\\) a solution of the wave equation?</div>' +
+      '<div class="btnrow"><button class="btn ghost" data-a="1">Yes, it is a wave</button><button class="btn ghost" data-a="0">No</button><span class="streak">Score ' + wScore + '/' + wTot + '</span></div><div class="explain" hidden></div>';
+    var exp = host.querySelector(".explain");
+    host.querySelectorAll("button[data-a]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var ans = b.getAttribute("data-a") === "1", ok = ans === it[1]; wTot++; if (ok) wScore++;
+        host.querySelectorAll("button[data-a]").forEach(function (x) { x.disabled = true; });
+        exp.innerHTML = '<div class="hd" style="color:var(' + (ok ? "--good" : "--bad") + ')">' + (ok ? "Correct" : "Wrong") + ": " + (it[1] ? "it is a solution." : "not a solution.") + '</div><p>' + it[2] + '</p><div class="btnrow"><button class="btn" id="wnext">Next expression →</button></div>';
+        exp.hidden = false; $("wnext").addEventListener("click", function () { wIdx++; showWave(); });
+        typeset(host);
+      });
+    });
+    typeset(host);
+  }
+
+  /* ---------- Practice generators ---------- */
+  function uniqOptions(correct, distractors, fmt) {
+    var vals = [correct];
+    distractors.forEach(function (d) {
+      if (vals.every(function (v) { return Math.abs(v - d) / Math.abs(v) > 0.04; })) vals.push(d);
+    });
+    var f = 1.37;
+    while (vals.length < 4) { var cand = correct * f; if (vals.every(function (v) { return Math.abs(v - cand) / Math.abs(v) > 0.04; })) vals.push(cand); f = f * 0.71 + 0.2; }
+    vals = vals.slice(0, 4);
+    var order = shuffle([0, 1, 2, 3]);
+    return { options: order.map(function (i) { return fmt(vals[i]); }), correct: order.indexOf(0) };
+  }
+  function tex(s) { return "\\(" + s + "\\)"; }
+
+  var gens = {
+    ecb: { label: "E = cB", run: function () {
+      if (Math.random() < 0.5) {
+        var E = ri(12, 95) * 10, B = E / C;
+        var o = uniqOptions(B * 1e6, [B * 1e6 * 1.53, B * 1e6 * 0.74, B * 1e6 * 0.58], function (v) { return tex(v.toFixed(2) + "\\ \\mu\\text{T}"); });
+        return { q: "The electric field amplitude at a point of an EM wave is " + tex(E + "\\ \\text{N/C}") + ". What is the magnetic field amplitude there? " + tex("(c = 3.0\\times10^8\\ \\text{m/s})"),
+          options: o.options, correct: o.correct,
+          why: "<p>" + tex("B = E/c = " + E + "/(3.0\\times10^8) = " + sci(B) + "\\ \\text{T}") + " = " + tex((B * 1e6).toFixed(2) + "\\ \\mu\\text{T}") + ".</p>" };
+      }
+      var Bu = +(rnd(0.6, 3.4)).toFixed(2), Ev = Bu * 1e-6 * C;
+      var o2 = uniqOptions(Ev, [Ev * 1.17, Ev / 1e8 * 0.82, Ev * 0.71], function (v) { return v < 1 ? tex(sig(v * 1e6, 3) + "\\ \\mu\\text{N/C}") : tex(sig(v, 3) + "\\ \\text{N/C}"); });
+      return { q: "The magnetic field strength at a point of an EM wave is " + tex(Bu + "\\ \\mu\\text{T}") + ". What is the electric field strength there?",
+        options: o2.options, correct: o2.correct,
+        why: "<p>" + tex("E = cB = 3.0\\times10^8 \\times " + Bu + "\\times10^{-6} = " + sig(Ev, 3) + "\\ \\text{N/C}") + ". An answer in µN/C means you divided by c.</p>" };
+    } },
+    point: { label: "Point source", run: function () {
+      var nice = [[1500, 3], [240, 2], [600, 2], [960, 4], [60, 1], [375, 2.5], [2400, 6], [150, 1.5]];
+      var pr = Math.random() < 0.6 ? pick(nice) : [ri(5, 40) * 50, ri(2, 10) / 2];
+      var P = pr[0], r = pr[1];
+      var I = P / (4 * Math.PI * r * r), E0 = Math.sqrt(2 * MU0 * C * I);
+      var o = uniqOptions(E0, [E0 / Math.SQRT2, Math.sqrt(2 * MU0 * C * P / (4 * Math.PI * r)), E0 * Math.sqrt(4)], function (v) { return sig(v, 2) + " V/m"; });
+      return { q: "A light source radiates isotropically with a power of " + P + " W. The maximum electric field at a distance of " + r + " m is:",
+        options: o.options, correct: o.correct,
+        why: '<ol class="method"><li><div>' + tex("I = \\dfrac{P}{4\\pi r^2} = \\dfrac{" + P + "}{4\\pi(" + r + ")^2} = " + sig(I, 4) + "\\ \\text{W/m}^2") + '</div></li><li><div>' +
+          tex("E_0 = \\sqrt{2\\mu_0 c I} = \\sqrt{754 \\times " + sig(I, 4) + "} = " + sig(E0, 3) + "\\ \\text{V/m}") + '</div></li></ol><p>Trap: ' + sig(E0 / Math.SQRT2, 2) + " V/m is what you get if you forget the 2 (that is the rms field).</p>" };
+    } },
+    energy: { label: "Energy on area", run: function () {
+      var S = +rnd(0.3, 2.5).toFixed(3), a = ri(2, 6) / 2, b = ri(2, 8) / 2, mins = pick([1, 2, 3, 5]);
+      var U = S * a * b * mins * 60;
+      var o = uniqOptions(U, [U / 60, U / 2, S * (a + b) * mins * 60], function (v) { return sig(v, 3) + " J"; });
+      return { q: "The average Poynting vector of a plane EM wave is " + tex(S + "\\ \\text{W/m}^2") + ". It falls perpendicularly on a " + tex(a + "\\ \\text{m}\\times" + b + "\\ \\text{m}") + " rectangle. How much energy reaches the area in " + mins + " minute" + (mins > 1 ? "s" : "") + "?",
+        options: o.options, correct: o.correct,
+        why: "<p>" + tex("U = \\langle S\\rangle A\\,\\Delta t = " + S + "\\times(" + a + "\\times" + b + ")\\times" + (mins * 60) + " = " + sig(U, 3) + "\\ \\text{J}") + ". The value is already an average, so no extra ½. Remember minutes → seconds.</p>" };
+    } },
+    smax: { label: "Poynting max", run: function () {
+      var Bm = pick([1, 1.5, 2, 2.5, 3, 4]), B0 = Bm * 1e-6;
+      var Sm = C * B0 * B0 / MU0;
+      var o = uniqOptions(Sm, [Sm / 2, B0 * B0 / MU0, Sm * 2], function (v) { return tex(sci(v, 3) + "\\ \\text{W/m}^2"); });
+      var ask = Math.random() < 0.5;
+      if (ask) {
+        return { q: "The magnetic field amplitude of a harmonic plane wave in vacuum is " + tex("B_0 = " + Bm + "\\times10^{-6}\\ \\text{T}") + ". What is the maximum value of its Poynting vector?",
+          options: o.options, correct: o.correct,
+          why: "<p>" + tex("S_{max} = \\dfrac{cB_0^2}{\\mu_0} = \\dfrac{3\\times10^8 (" + Bm + "\\times10^{-6})^2}{4\\pi\\times10^{-7}} = " + sci(Sm) + "\\ \\text{W/m}^2") + ". Half of that is the average; that option is the trap.</p>" };
+      }
+      var o2 = uniqOptions(Sm / 2, [Sm, B0 * B0 / MU0 / 2, Sm / 4], function (v) { return tex(sci(v, 3) + "\\ \\text{W/m}^2"); });
+      return { q: "A plane wave has " + tex("B_0 = " + Bm + "\\ \\mu\\text{T}") + ". What is its intensity (time-averaged Poynting vector)?",
+        options: o2.options, correct: o2.correct,
+        why: "<p>" + tex("I = \\dfrac{cB_0^2}{2\\mu_0} = " + sci(Sm / 2) + "\\ \\text{W/m}^2") + ". Average means the ½ is included.</p>" };
+    } },
+    lambda: { label: "c = λf", run: function () {
+      var l1 = pick([380, 400, 420, 450]), l2 = pick([650, 700, 750]);
+      var hi = Math.random() < 0.6, l = hi ? l1 : l2, f = C / (l * 1e-9), other = C / ((hi ? l2 : l1) * 1e-9);
+      var o = uniqOptions(f, [other, C / (l * 1e-6), f * 1e6], function (v) { return tex(sci(v, 2) + "\\ \\text{Hz}"); });
+      return { q: "Visible light wavelengths range from " + l1 + " nm to " + l2 + " nm. What is the " + (hi ? "highest" : "lowest") + " frequency of visible light? " + tex("(c = 3.0\\times10^8\\ \\text{m/s})"),
+        options: o.options, correct: o.correct,
+        why: "<p>" + (hi ? "Highest f ↔ shortest λ. " : "Lowest f ↔ longest λ. ") + tex("f = c/\\lambda = 3.0\\times10^8/(" + l + "\\times10^{-9}) = " + sci(f, 2) + "\\ \\text{Hz}") + ".</p>" };
+    } },
+    solenoid: { label: "Induced E", run: function () {
+      if (Math.random() < 0.4) {
+        var opts = [tex("E = \\dfrac{\\mu_0 n k r}{2}"), tex("E = \\mu_0 n k \\pi r^2"), tex("E = \\dfrac{\\mu_0 n (h_0 + kt) r}{2}"), "It cannot be determined without the solenoid radius."];
+        var ord = shuffle([0, 1, 2, 3]);
+        return { q: "An infinite solenoid with " + tex("n") + " turns per metre carries " + tex("i = h_0 + kt") + ". What is the magnitude of the induced electric field at distance " + tex("r") + " from the axis, inside?",
+          options: ord.map(function (i) { return opts[i]; }), correct: ord.indexOf(0),
+          why: "<p>Only " + tex("di/dt = k") + " matters. " + tex("E\\,2\\pi r = \\pi r^2\\mu_0 n k \\Rightarrow E = \\mu_0 n k r/2") + ". R is not needed inside.</p>" };
+      }
+      var n = ri(5, 40) * 100, k = ri(2, 30) * 5, r = ri(1, 8), R = r + ri(1, 5), inside = Math.random() < 0.7;
+      var rr = inside ? r : R + ri(2, 8), Rm = R / 100, rm = rr / 100;
+      var E = inside ? MU0 * n * k * rm / 2 : MU0 * n * k * Rm * Rm / (2 * rm);
+      var wrongIn = MU0 * n * k * rm, wrongOut = MU0 * n * k * rm / 2;
+      var o = uniqOptions(E, inside ? [wrongIn, MU0 * n * k * Math.PI * rm * rm, E * 100] : [wrongOut, MU0 * n * k * Rm / 2, E * 2], function (v) { return tex(sci(v, 3) + "\\ \\text{V/m}"); });
+      return { q: "A long solenoid of radius " + R + " cm has " + n + " turns/m. Its current rises at " + k + " A/s. Find the induced electric field at " + rr + " cm from the axis.",
+        options: o.options, correct: o.correct,
+        why: inside
+          ? "<p>Inside " + tex("(r<R)") + ": " + tex("E = \\dfrac{\\mu_0 n r}{2}\\dfrac{di}{dt} = \\dfrac{4\\pi\\times10^{-7}\\cdot" + n + "\\cdot" + sig(rm, 3) + "\\cdot" + k + "}{2} = " + sci(E) + "\\ \\text{V/m}") + ".</p>"
+          : "<p>Outside " + tex("(r>R)") + ": flux only through " + tex("\\pi R^2") + ". " + tex("E = \\dfrac{\\mu_0 n R^2}{2r}\\dfrac{di}{dt} = " + sci(E) + "\\ \\text{V/m}") + ".</p>" };
+    } },
+    pol: { label: "Polarization", run: function () {
+      var cases = [
+        [1, 1, 0], [1, 1, 180], [1, 1, 90], [1, 1, -90], [2, 1, 90], [1, 2, -90], [1, 1, 45], [3, 3, 180], [2, 2, 0], [1, Math.sqrt(3), 0], [1, Math.sqrt(3), 180]
+      ];
+      var c = pick(cases), cl = classifyPol(c[0], c[1], c[2]).kind;
+      var pool = ["Linear at 45°", "Linear at 135°", "Circular, counterclockwise", "Circular, clockwise", "Elliptical, counterclockwise", "Elliptical, clockwise", "Linear at 60°", "Linear at 120°"];
+      pool = pool.filter(function (p) { return p !== cl; });
+      var opts = shuffle([cl].concat(shuffle(pool).slice(0, 3)));
+      var phTex = { "0": "0", "180": "\\pi", "90": "\\pi/2", "-90": "-\\pi/2", "45": "\\pi/4" }[String(c[2])];
+      var e2t = Math.abs(c[1] - Math.sqrt(3)) < 1e-9 ? "\\sqrt3\\,E_0" : (c[1] === 1 ? "" : c[1]) + "E_0";
+      var e1t = (c[0] === 1 ? "" : c[0]) + "E_0";
+      return { q: "A plane wave is " + tex("\\vec E = " + e1t + "\\cos(kz-\\omega t)\\,\\hat x + " + e2t + "\\cos(kz-\\omega t + " + phTex + ")\\,\\hat y") + ". Seen from the +z side looking at the origin, the tip of " + tex("\\vec E") + " traces:",
+        options: opts, correct: opts.indexOf(cl),
+        why: "<p>Phase difference " + tex("\\varphi = " + phTex) + ", amplitudes " + tex(e1t) + " and " + tex(e2t) + ". " + classifyPol(c[0], c[1], c[2]).why + "</p><p>Try it in the polarization lab above with the same values.</p>" };
+    } },
+    wave: { label: "Wave equation", run: function () {
+      var good = ["f_1(x - vt) + f_2[2(x - vt)]", "\\sin(kx - \\omega t) + \\cos(kx + \\omega t)", "e^{-(x+vt)^2}", "A\\,(x - vt)^3", "f(3x - 3vt)"];
+      var bad = ["f_1(x^2 - vt^2)", "f_1(x - vt^2) + f_2(x + vt^2)", "f_1(x^2 - vt)", "\\sin(x - vt^2)", "e^{-x^2}\\cos(vt^2)", "f(x^2 + vt)"];
+      var g = pick(good), bs = shuffle(bad).slice(0, 3), opts = shuffle([g].concat(bs));
+      return { q: "Which of these is a solution of " + tex("\\dfrac{\\partial^2\\xi}{\\partial x^2} = \\dfrac{1}{v^2}\\dfrac{\\partial^2\\xi}{\\partial t^2}") + "?",
+        options: opts.map(function (o) { return tex("\\xi = " + o); }), correct: opts.indexOf(g),
+        why: "<p>Only " + tex(g) + " depends on " + tex("x") + " and " + tex("t") + " purely through " + tex("x \\pm vt") + ". The others square one variable but not the other.</p>" };
+    } },
+    concept: { label: "Concepts", run: function () {
+      var bank = [
+        { q: "The mutual induction coefficient between two circuits does NOT depend on:", o: ["the current flowing in the circuits", "the shape of the circuits", "the distance between them", "the medium between them"], w: "<p>" + tex("M = \\Phi_{21}/i_1") + ": flux grows in proportion to current, so current cancels. M is pure geometry plus medium.</p>" },
+        { q: "The self-inductance of a long solenoid doubles if you:", o: ["double its length while keeping n fixed", "double the current", "double the rate of change of current", "halve the cross-section area"], w: "<p>" + tex("L = \\mu_0 n^2 A \\ell") + ". Doubling " + tex("\\ell") + " at fixed n doubles L. Current never changes L.</p>" },
+        { q: "A charged capacitor stays connected to a battery while its plates are pulled apart. The displacement current between the plates:", o: ["is non-zero, because E = V/d changes", "is zero, because Q is constant", "is zero, because there is no conduction current", "equals the battery's short-circuit current"], w: "<p>With V fixed, " + tex("E = V/d") + " drops as d grows, so " + tex("\\partial E/\\partial t \\neq 0") + ".</p>" },
+        { q: "An isolated charged parallel-plate capacitor has its plates pulled apart. Neglecting edge effects, the displacement current density inside is:", o: ["zero", "increasing in time", "decreasing in time", "constant but not zero"], w: "<p>Isolated → Q fixed → " + tex("E = Q/(\\varepsilon_0 A)") + " fixed → " + tex("J_d = 0") + ".</p>" },
+        { q: "While a capacitor is charged by a current I, the displacement current between its plates is:", o: ["equal to I", "zero", "I/2", "larger than I"], w: "<p>Maxwell added " + tex("I_d") + " exactly so that current is continuous through the gap: " + tex("I_d = I") + ".</p>" },
+        { q: "The magnetic field created at P by a moving non-relativistic point charge:", o: ["falls as 1/r² with distance", "falls as 1/r with distance", "does not depend on the direction of motion", "does not depend on the charge"], w: "<p>" + tex("B = \\frac{\\mu_0}{4\\pi}\\frac{qv\\sin\\theta}{r^2}") + ".</p>" },
+        { q: "Along the line of motion of a moving point charge (directly ahead), its magnetic field is:", o: ["zero", "maximum", "the same as at 90°", "infinite"], w: "<p>" + tex("\\sin\\theta = 0") + " for points along " + tex("\\vec v") + ", so B = 0.</p>" },
+        { q: "A plane EM wave is linearly polarized when:", o: ["the planes of oscillation of E and B stay fixed in time", "E and B are perpendicular to the propagation direction", "E and B point in the same direction", "E and B are out of phase by π/2"], w: "<p>Perpendicular to propagation is true for every plane wave. Linear means the oscillation plane is fixed.</p>" },
+        { q: "In vacuum, compared with violet light, red light has:", o: ["lower frequency and the same speed", "higher frequency and the same speed", "lower frequency and higher speed", "higher frequency and lower speed"], w: "<p>Longer λ → lower f. Speed is " + tex("c") + " for all EM waves in vacuum.</p>" },
+        { q: "In a plane EM wave in vacuum, the electric and magnetic fields are:", o: ["in phase and perpendicular to each other", "π/2 out of phase", "parallel to each other", "in phase and parallel to the propagation"], w: "<p>" + tex("E = cB") + " at every instant (in phase), " + tex("\\vec E \\perp \\vec B \\perp \\vec k") + ".</p>" },
+        { q: "If the distance from an isotropic point source doubles, the amplitude of the electric field:", o: ["halves", "drops to a quarter", "stays the same", "doubles"], w: "<p>" + tex("I \\propto 1/r^2") + " and " + tex("I \\propto E_0^2") + ", so " + tex("E_0 \\propto 1/r") + ".</p>" },
+        { q: "The induced electric field inside a solenoid with a steadily increasing current, as a function of distance r from the axis:", o: ["grows linearly with r", "is uniform", "falls as 1/r", "is zero"], w: "<p>" + tex("E = \\frac{\\mu_0 n r}{2}\\frac{di}{dt}") + " inside. It falls as 1/r only outside.</p>" }
+      ];
+      var it = pick(bank), ord = shuffle([0, 1, 2, 3]);
+      return { q: it.q, options: ord.map(function (i) { return it.o[i]; }), correct: ord.indexOf(0), why: it.w };
+    } }
+  };
+
+  var pActive = Object.keys(gens);
+  var pStats = store("emk-practice") || { done: 0, right: 0, streak: 0, best: 0 };
+  function renderChips() {
+    var host = $("pchips"); host.innerHTML = "";
+    var all = document.createElement("button"); all.className = "chip" + (pActive.length === Object.keys(gens).length ? " on" : ""); all.textContent = "All topics";
+    all.addEventListener("click", function () { pActive = Object.keys(gens); renderChips(); nextPractice(); }); host.appendChild(all);
+    Object.keys(gens).forEach(function (k) {
+      var b = document.createElement("button"); b.className = "chip" + (pActive.length === 1 && pActive[0] === k ? " on" : ""); b.textContent = gens[k].label;
+      b.addEventListener("click", function () { pActive = [k]; renderChips(); nextPractice(); }); host.appendChild(b);
+    });
+  }
+  function renderPStats() {
+    $("pstats").textContent = "Answered " + pStats.done + " · correct " + pStats.right + (pStats.done ? " (" + Math.round(100 * pStats.right / pStats.done) + "%)" : "") + " · streak " + pStats.streak + " · best streak " + pStats.best;
+    updateProgress();
+  }
+  function nextPractice() {
+    var key = pick(pActive), item = gens[key].run();
+    item.q = '<div class="meta"><span>' + gens[key].label.toUpperCase() + '</span></div>' + item.q;
+    var host = $("pq");
+    renderMCQ(host, item, function (ok) {
+      pStats.done++; if (ok) { pStats.right++; pStats.streak++; pStats.best = Math.max(pStats.best, pStats.streak); } else pStats.streak = 0;
+      store("emk-practice", pStats); renderPStats();
+      var row = document.createElement("div"); row.className = "btnrow";
+      var nb = document.createElement("button"); nb.className = "btn"; nb.textContent = "Next question →"; nb.addEventListener("click", nextPractice);
+      row.appendChild(nb); host.appendChild(row);
+    });
+  }
+
+  /* ---------- Exam replay ---------- */
+  var EXAM = [
+    { t: "Polarization", q: "A plane EM wave is the superposition of two orthogonal plane waves: " + tex("\\vec E = E_1 e^{i(kz-\\omega t)}\\hat u_x + E_2 e^{i(kz-\\omega t+\\pi)}\\hat u_y") + ", with k, ω, E₁, E₂ real. If " + tex("E_2 = E_1") + ", the tip of the electric field, seen along z from the positive side looking at the origin, describes:",
+      o: ["a straight line at 45° to the +x axis", "a circle, clockwise", "a straight line at 135° to the +x axis", "a circle, counterclockwise"], c: 2,
+      w: "<p>Phase difference π → " + tex("E_y = -E_x") + " → line " + tex("y = -x") + " at 135°. Circles need a phase of " + tex("\\pm\\pi/2") + ".</p>" },
+    { t: "Polarization", q: "A plane EM wave is \"linearly polarized\" when:",
+      o: ["E and B are perpendicular but out of phase by π/2", "E and B have the same direction", "the plane of oscillation of E and that of B remain constant over time", "E and B are perpendicular to the direction of propagation"], c: 2,
+      w: "<p>Option D is true for every plane EM wave, so it can't be the definition. A and B are false in vacuum.</p>" },
+    { t: "Intensity", q: "The average Poynting vector of a plane EM wave is " + tex("0.939\\ \\text{W/m}^2") + ". The wave hits a " + tex("1.5\\ \\text{m}\\times2.0\\ \\text{m}") + " rectangle perpendicularly. How much energy reaches it in one minute?",
+      o: ["300 J", "210 J", "250 J", "170 J"], c: 3,
+      w: "<p>" + tex("U = 0.939\\times3.0\\times60 = 169\\ \\text{J}") + ".</p>" },
+    { t: "Intensity", q: "A light source radiates isotropically with power 1500 W. The maximum electric field at 3 m is:",
+      o: ["100 V/m", "70 V/m", "50 V/m", "none of the proposed values"], c: 0,
+      w: "<p>" + tex("I = 1500/(4\\pi\\cdot9) = 13.26\\ \\text{W/m}^2") + ", " + tex("E_0 = \\sqrt{754\\times13.26} = 100\\ \\text{V/m}") + ". 70 V/m is the rms trap.</p>" },
+    { t: "Wave equation", q: "Which wave function solves " + tex("\\dfrac{d^2\\xi}{dx^2} = \\dfrac{1}{v^2}\\dfrac{d^2\\xi}{dt^2}") + "?",
+      o: [tex("\\xi = f_1(x^2 - vt^2)"), tex("\\xi = f_1(x - vt^2) + f_2(x + vt^2)"), tex("\\xi = f_1(x^2 - vt)"), tex("\\xi = f_1(x - vt) + f_2[2(x - vt)]")], c: 3,
+      w: "<p>Both terms depend only on " + tex("x - vt") + ".</p>" },
+    { t: "c = λf", q: "Visible light ranges from 400 nm to 700 nm. What is the highest frequency of visible light? " + tex("(c = 3.0\\times10^8\\ \\text{m/s})"),
+      o: [tex("2.3\\times10^{20}\\ \\text{Hz}"), tex("4.3\\times10^{14}\\ \\text{Hz}"), tex("3.1\\times10^{8}\\ \\text{Hz}"), tex("7.5\\times10^{14}\\ \\text{Hz}")], c: 3,
+      w: "<p>" + tex("f = c/400\\ \\text{nm} = 7.5\\times10^{14}\\ \\text{Hz}") + ". 4.3×10¹⁴ uses 700 nm (lowest).</p>" },
+    { t: "Induced E", q: "An infinite solenoid with n turns per unit length carries " + tex("i = h_0 + kt") + " (constants). What is the magnitude of the induced electric field at a point P inside, at distance r from the axis?",
+      o: [tex("E = \\mu_0 n k \\pi r^2"), tex("E = \\dfrac{\\mu_0 n k r}{2}"), tex("E = \\dfrac{\\mu_0 n (h_0 + kt) r}{2}"), "It cannot be determined since the radius of the turns is not given."], c: 1,
+      w: "<p>" + tex("E\\,2\\pi r = \\pi r^2\\mu_0 n k") + ". The constant " + tex("h_0") + " and the radius R do not appear.</p>" },
+    { t: "E = cB", q: "The electric field amplitude at P for an EM wave is 570 N/C. What is the magnetic field at P? " + tex("(c = 3.0\\times10^8\\ \\text{m/s})"),
+      o: ["2.91 µT", "1.41 µT", "1.10 µT", "1.90 µT"], c: 3,
+      w: "<p>" + tex("B = 570/3\\times10^8 = 1.90\\times10^{-6}\\ \\text{T}") + ".</p>" },
+    { t: "Inductance", q: "The mutual induction coefficient between two circuits does NOT depend on:",
+      o: ["the shape of the two circuits", "the distance between the two circuits", "the intensity of current flowing in the two circuits", "the medium between the two circuits"], c: 2,
+      w: "<p>" + tex("M = \\Phi/i") + ": current cancels.</p>" },
+    { t: "Moving charge", q: "The magnetic field generated at P by a moving (non-relativistic) charge:",
+      o: ["is inversely proportional to the square of the distance to P", "does not depend on the direction of motion", "is inversely proportional to the distance to P", "does not depend on the charge magnitude"], c: 0,
+      w: "<p>" + tex("B \\propto qv\\sin\\theta / r^2") + ".</p>" },
+    { t: "E = cB", q: "The magnetic field strength at P for an EM wave is " + tex("2.12\\ \\mu\\text{T}") + ". What is the electric field strength at P?",
+      o: [tex("5.23\\ \\mu\\text{N/C}"), tex("745\\ \\text{N/C}"), tex("6.36\\ \\mu\\text{N/C}"), tex("636\\ \\text{N/C}")], c: 3,
+      w: "<p>" + tex("E = cB = 3\\times10^8\\times2.12\\times10^{-6} = 636\\ \\text{N/C}") + ".</p>" },
+    { t: "c = λf", q: "In vacuum, red light has λ = 700 nm and violet light λ = 400 nm. So in vacuum red light has:",
+      o: ["higher frequency and higher speed than violet", "higher frequency and lower speed than violet", "lower frequency and higher speed than violet", "None of the others"], c: 3,
+      w: "<p>Red: lower frequency, <em>same</em> speed. No option says that.</p>" },
+    { t: "Intensity", q: "A light source radiates isotropically with power 240 W. The maximum electric field at 2 m is:",
+      o: ["60 V/m", "15 V/m", "30 V/m", "none of the proposed values"], c: 0,
+      w: "<p>" + tex("I = 240/(16\\pi) = 4.77\\ \\text{W/m}^2") + ", " + tex("E_0 = \\sqrt{754\\times4.77} = 60\\ \\text{V/m}") + ".</p>" },
+    { t: "Displacement current", q: "The plates of an isolated charged flat capacitor move apart over time. Neglecting edge effects, the displacement current density inside:",
+      o: ["increases over time", "is zero", "decreases over time", "is constant over time but not necessarily zero"], c: 1,
+      w: "<p>Q fixed → " + tex("E = Q/(\\varepsilon_0 A)") + " fixed → " + tex("J_d = 0") + ".</p>" },
+    { t: "Intensity", q: "The maximum magnetic field of a harmonic plane wave in vacuum is " + tex("B_0 = 2\\times10^{-6}\\ \\text{T}") + ". What is the maximum value of its Poynting vector?",
+      o: [tex("955.8\\ \\text{W/m}^2"), tex("5.31\\times10^{-9}\\ \\text{W/m}^2"), tex("2.66\\times10^{-9}\\ \\text{W/m}^2"), tex("478\\ \\text{W/m}^2")], c: 0,
+      w: "<p>" + tex("S_{max} = cB_0^2/\\mu_0 = 955.8\\ \\text{W/m}^2") + ". 478 is the average.</p>" }
+  ];
+  var eAns = store("emk-exam") || new Array(EXAM.length).fill(null);
+  if (eAns.length !== EXAM.length) eAns = new Array(EXAM.length).fill(null);
+  var eCur = 0;
+  function renderExamNav() {
+    var nav = $("enav"); nav.innerHTML = "";
+    EXAM.forEach(function (it, i) {
+      var b = document.createElement("button"); b.textContent = i + 1; b.setAttribute("aria-label", "Question " + (i + 1));
+      if (i === eCur) b.classList.add("cur");
+      if (eAns[i] !== null) b.classList.add(eAns[i] === it.c ? "ok" : "no");
+      b.addEventListener("click", function () { eCur = i; renderExam(); }); nav.appendChild(b);
+    });
+    var done = eAns.filter(function (a) { return a !== null; }).length;
+    var pts = eAns.reduce(function (s, a, i) { return s + (a === EXAM[i].c ? 2 : 0); }, 0);
+    $("escore").textContent = done ? pts + " / 30 pts · " + done + "/15 answered" : "";
+    updateProgress();
+  }
+  function renderExam() {
+    var it = EXAM[eCur];
+    renderMCQ($("eq"), { q: '<div class="meta"><span>QUESTION ' + (eCur + 1) + ' OF 15</span><span>' + it.t.toUpperCase() + '</span><span>2 PTS</span></div>' + it.q, options: it.o, correct: it.c, why: it.w },
+      function (ok, i) { eAns[eCur] = i; store("emk-exam", eAns); renderExamNav(); }, eAns[eCur]);
+    renderExamNav();
+  }
+  $("eprev").addEventListener("click", function () { eCur = (eCur + EXAM.length - 1) % EXAM.length; renderExam(); });
+  $("enext").addEventListener("click", function () { eCur = (eCur + 1) % EXAM.length; renderExam(); });
+  $("ereset").addEventListener("click", function () { eAns = new Array(EXAM.length).fill(null); store("emk-exam", eAns); eCur = 0; renderExam(); });
+
+  function updateProgress() {
+    var done = eAns.filter(function (a) { return a !== null; }).length;
+    var pts = eAns.reduce(function (s, a, i) { return s + (a === EXAM[i].c ? 2 : 0); }, 0);
+    $("progress").innerHTML =
+      '<span class="pill">Test replay <strong>' + pts + '/30</strong> (' + done + '/15 answered)</span>' +
+      '<span class="pill">Practice <strong>' + pStats.right + '/' + pStats.done + '</strong> correct</span>' +
+      '<span class="pill">Best streak <strong>' + pStats.best + '</strong></span>';
+  }
+
+  /* ---------- boot ---------- */
+  function drawAll() { drawFaraday(); drawDisp(); drawSpec(); polRestart(); }
+  calcPoint(); renderChips(); renderPStats(); nextPractice(); showWave(); renderExam();
+  drawAll();
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
+  if (window.matchMedia) { var mq = matchMedia("(prefers-color-scheme: dark)"); if (mq.addEventListener) mq.addEventListener("change", drawAll); }
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
