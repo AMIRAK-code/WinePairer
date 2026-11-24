@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electrostatics Study Guide</title>
+<style>
+:root{
+  --bg:#f7f6f2; --card:#ffffff; --ink:#1d1f24; --muted:#5d6370; --line:#e2e0d8;
+  --accent:#2f5fd0; --accent-soft:#e8eefc; --good:#1f8a4c; --good-soft:#e5f5ec;
+  --bad:#c0392b; --bad-soft:#fbeaea; --warn:#9a6a00; --warn-soft:#fff5dc;
+  --plus:#d0402f; --minus:#2f5fd0; --field:#7a7f8c;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14161b; --card:#1d2027; --ink:#e7e8ec; --muted:#9aa0ad; --line:#2e323c;
+    --accent:#7aa2ff; --accent-soft:#1f2a44; --good:#4cc787; --good-soft:#163024;
+    --bad:#ff7a6b; --bad-soft:#3a1f1c; --warn:#f2c14e; --warn-soft:#3a3016;
+    --plus:#ff7a6b; --minus:#7aa2ff; --field:#8d93a1;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14161b; --card:#1d2027; --ink:#e7e8ec; --muted:#9aa0ad; --line:#2e323c;
+  --accent:#7aa2ff; --accent-soft:#1f2a44; --good:#4cc787; --good-soft:#163024;
+  --bad:#ff7a6b; --bad-soft:#3a1f1c; --warn:#f2c14e; --warn-soft:#3a3016;
+  --plus:#ff7a6b; --minus:#7aa2ff; --field:#8d93a1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+header h1{font-size:1.9rem;margin:.2em 0 .1em;letter-spacing:-.01em}
+header p{color:var(--muted);margin:.2em 0}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+nav.toc a{font-size:.88rem;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+h2{font-size:1.35rem;margin:48px 0 8px;padding-top:8px;border-top:1px solid var(--line)}
+h2 .num{color:var(--accent);margin-right:6px}
+h3{font-size:1.05rem;margin:24px 0 6px}
+p,li{max-width:70ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.formula{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.12rem;background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0;overflow-x:auto}
+.math{font-family:"Cambria Math","STIX Two Math",Georgia,serif;white-space:nowrap}
+.tip{background:var(--warn-soft);border-left:4px solid var(--warn);padding:10px 14px;border-radius:6px;margin:12px 0}
+.tip b:first-child{color:var(--warn)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+figure{margin:14px 0;text-align:center}
+figure svg{max-width:100%;height:auto}
+figcaption{font-size:.85rem;color:var(--muted)}
+/* question cards */
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:18px 0}
+.q .tag{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.q .tag .rec{color:var(--warn);margin-left:6px;text-transform:none;letter-spacing:0;font-weight:600}
+.q .stem{margin:6px 0 10px;font-weight:500}
+.q button.opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer}
+.q button.opt:hover:not([disabled]){border-color:var(--accent);background:var(--accent-soft)}
+.q button.opt[disabled]{cursor:default}
+.q button.opt.right{border-color:var(--good);background:var(--good-soft)}
+.q button.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.q .why{display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--accent-soft);font-size:.95rem}
+.q.done .why{display:block}
+.q .letter{font-weight:700;margin-right:8px;color:var(--muted)}
+/* quiz */
+#quiz .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font:inherit;border:0;border-radius:8px;padding:9px 16px;background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#10131a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#10131a}}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.score{font-weight:700}
+.themebtn{position:fixed;top:12px;right:12px;font-size:.8rem;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.sheet div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.sheet div b{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+</style>
+</head>
+<body>
+<button class="themebtn" id="themebtn" type="button">Toggle theme</button>
+<div class="wrap">
+
+<header>
+  <div style="font-size:.88rem;margin-bottom:6px"><b>Part 1: Electrostatics &amp; conductors</b> · <a href="magnetostatics.html" style="color:var(--accent)">Part 2: Magnetostatics &amp; currents →</a></div>
+  <h1>Electrostatics &amp; Conductors</h1>
+  <p>A study guide built around the 15 questions of <em>Test Part 1 (Electrostatic, conductors)</em>. Each section covers the theory first, then the exam question. Click an option to see whether it's right and why.</p>
+  <p style="font-size:.88rem">Questions marked <span style="color:var(--warn);font-weight:600">reconstructed</span> had their formulas as images, which didn't come through in the copy. I rebuilt them from the standard version of the question, so the method is right but the exact numbers may differ from yours.</p>
+</header>
+
+<nav class="toc">
+  <a href="#sheet">Cheat sheet</a>
+  <a href="#units">1 · Units</a>
+  <a href="#fields">2 · Fields of distributions</a>
+  <a href="#potential">3 · Potential</a>
+  <a href="#dipole">4 · Dipoles</a>
+  <a href="#motion">5 · Charges in fields</a>
+  <a href="#caps">6 · Capacitors</a>
+  <a href="#quiz">Practice quiz</a>
+</nav>
+
+<!-- ================= CHEAT SHEET ================= -->
+<h2 id="sheet">Cheat sheet</h2>
+<div class="sheet">
+  <div><b>Coulomb</b><span class="math">F = k q₁q₂ / r²,  k = 1/(4πε₀) ≈ 8.99×10⁹</span></div>
+  <div><b>Field ↔ potential</b><span class="math">E = −∇V,  V = −∫E·dl</span></div>
+  <div><b>Gauss</b><span class="math">∮E·dA = Q<sub>in</sub>/ε₀,  ∇·E = ρ/ε₀</span></div>
+  <div><b>Conservative</b><span class="math">∇×E = 0</span> (irrotational)</div>
+  <div><b>Poisson</b><span class="math">∇²V = −ρ/ε₀</span></div>
+  <div><b>Infinite wire</b><span class="math">E = λ / (2πε₀ r)</span></div>
+  <div><b>Infinite plane</b><span class="math">E = σ / (2ε₀)</span></div>
+  <div><b>Two opposite planes</b><span class="math">E = σ/ε₀</span> inside, 0 outside</div>
+  <div><b>Across a surface charge</b><span class="math">ΔE<sub>⊥</sub> = σ/ε₀,  ΔE<sub>∥</sub> = 0</span></div>
+  <div><b>Dipole (uniform E)</b><span class="math">F = 0,  τ = p×E,  U = −p·E</span></div>
+  <div><b>Capacitors</b><span class="math">C<sub>par</sub> = C₁+C₂,  1/C<sub>ser</sub> = 1/C₁+1/C₂</span></div>
+  <div><b>Volt</b><span class="math">V = J/C = kg·m²·s⁻³·A⁻¹</span></div>
+</div>
+
+<!-- ================= 1. UNITS ================= -->
+<h2 id="units"><span class="num">1</span>Units and dimensional analysis</h2>
+<p>Nearly every unit question comes down to rewriting things in the four SI base units that show up here: <b>kg, m, s, A</b>. Memorise these conversions and the rest is algebra:</p>
+<div class="tablewrap"><table>
+<tr><th>Quantity</th><th>Unit</th><th>In base units</th></tr>
+<tr><td>Force</td><td>N</td><td>kg·m·s⁻²</td></tr>
+<tr><td>Energy</td><td>J = N·m</td><td>kg·m²·s⁻²</td></tr>
+<tr><td>Charge</td><td>C = A·s</td><td>A·s</td></tr>
+<tr><td>Potential</td><td>V = J/C</td><td>kg·m²·s⁻³·A⁻¹</td></tr>
+<tr><td>Electric field</td><td>V/m = N/C</td><td>kg·m·s⁻³·A⁻¹</td></tr>
+<tr><td>Capacitance</td><td>F = C/V</td><td>kg⁻¹·m⁻²·s⁴·A²</td></tr>
+<tr><td>ε₀</td><td>F/m = C²/(N·m²)</td><td>kg⁻¹·m⁻³·s⁴·A²</td></tr>
+<tr><td>k = 1/(4πε₀)</td><td>N·m²/C²</td><td>kg·m³·s⁻⁴·A⁻²</td></tr>
+</table></div>
+
+<h3>Worked example: units of k</h3>
+<div class="formula">[k] = N·m²/C² = (kg·m·s⁻²)(m²) / (A·s)² = kg·m³·s⁻⁴·A⁻²</div>
+<p>ε₀ has exactly the inverse units of k (the 4π is dimensionless): kg⁻¹·m⁻³·s⁴·A². A common trap is an option with the right powers but one sign flipped, so check each base unit separately.</p>
+
+<h3>Units of things built from E</h3>
+<p>When a question asks for the units of an expression in E, apply the operator's units:</p>
+<ul>
+  <li><b>∇·E</b> or <b>∇×E</b>: derivatives divide by metres, so V/m² (= ρ/ε₀ for the divergence).</li>
+  <li><b>Flux ∮E·dA</b>: multiply by m², giving V·m (= N·m²/C).</li>
+  <li><b>Energy density ½ε₀E²</b>: J/m³. Check: (C²/(N·m²))·(N/C)² = N/m² = J/m³.</li>
+  <li><b>∫E·dl</b>: V.</li>
+</ul>
+
+<div data-q="5"></div>
+<div data-q="9"></div>
+<div data-q="7"></div>
+
+<!-- ================= 2. FIELDS ================= -->
+<h2 id="fields"><span class="num">2</span>Fields of standard charge distributions</h2>
+<p>For symmetric distributions use <b>Gauss's law</b>: pick a surface where E is constant and either parallel or perpendicular to the surface, then</p>
+<div class="formula">∮ E · dA = Q<sub>enclosed</sub> / ε₀</div>
+
+<h3>Infinite straight wire (charge per length λ)</h3>
+<p>Use a coaxial cylinder of radius r and length L. Only the curved side has flux: E·(2πrL) = λL/ε₀.</p>
+<div class="formula">E(r) = λ / (2π ε₀ r)  — falls off as 1/r</div>
+
+<h3>Infinite plane (charge per area σ)</h3>
+<p>Use a "pillbox" crossing the plane. Flux exits from both faces: 2EA = σA/ε₀.</p>
+<div class="formula">E = σ / (2ε₀)  — uniform, independent of distance</div>
+
+<h3>Two parallel planes, +σ and −σ</h3>
+<p>Superpose the two fields of σ/(2ε₀). Between the plates they point the same way and add; outside they point opposite ways and cancel.</p>
+<figure>
+<svg viewBox="0 0 420 170" role="img" aria-label="Two parallel plates with uniform field between them and none outside">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+  <rect x="140" y="20" width="8" height="130" fill="var(--plus)"/>
+  <rect x="272" y="20" width="8" height="130" fill="var(--minus)"/>
+  <text x="144" y="14" text-anchor="middle" font-size="14" fill="var(--plus)">+σ</text>
+  <text x="276" y="14" text-anchor="middle" font-size="14" fill="var(--minus)">−σ</text>
+  <g stroke="var(--accent)" stroke-width="2" marker-end="url(#ar)">
+    <line x1="156" y1="45" x2="262" y2="45"/><line x1="156" y1="85" x2="262" y2="85"/><line x1="156" y1="125" x2="262" y2="125"/>
+  </g>
+  <text x="210" y="165" text-anchor="middle" font-size="13" fill="var(--ink)">E = σ/ε₀ (uniform)</text>
+  <text x="65" y="90" text-anchor="middle" font-size="13" fill="var(--muted)">E = 0</text>
+  <text x="355" y="90" text-anchor="middle" font-size="13" fill="var(--muted)">E = 0</text>
+</svg>
+<figcaption>Inside: uniform σ/ε₀, independent of the gap d. Outside: zero.</figcaption>
+</figure>
+
+<h3>Boundary conditions across a charged surface</h3>
+<p>Going through a surface with charge σ:</p>
+<ul>
+  <li>The <b>normal</b> component jumps: E<sub>⊥,above</sub> − E<sub>⊥,below</sub> = σ/ε₀ (from a Gauss pillbox).</li>
+  <li>The <b>tangential</b> component is continuous: ΔE<sub>∥</sub> = 0 (from ∮E·dl = 0 around a thin rectangle).</li>
+</ul>
+<div class="tip"><b>Trap:</b> σ/ε₀ is the jump of the <em>normal</em> component. If the question says <em>tangent</em>, the answer is 0.</div>
+
+<div data-q="12"></div>
+<div data-q="8"></div>
+<div data-q="2"></div>
+
+<!-- ================= 3. POTENTIAL ================= -->
+<h2 id="potential"><span class="num">3</span>Electrostatic potential</h2>
+<h3>The electrostatic field is conservative</h3>
+<p>The work done by an electrostatic field doesn't depend on the path, so ∮E·dl = 0 and, in differential form,</p>
+<div class="formula">∇ × E = 0   (the field is <b>irrotational</b>)</div>
+<p>That's what lets us write E as the gradient of a scalar: <span class="math">E = −∇V</span>. Compare: "solenoidal" means ∇·B = 0 (true for B, not for E where there's charge, because ∇·E = ρ/ε₀).</p>
+
+<h3>From V to E: take the gradient</h3>
+<div class="formula">E = −∇V = −( ∂V/∂x , ∂V/∂y , ∂V/∂z )</div>
+<p>Example: V = a x² + b y z gives E = (−2a x, −b z, −b y). Being conservative doesn't make E zero. It only means E <em>is</em> a gradient.</p>
+
+<h3>Continuity of V</h3>
+<p>V is an integral of E. Integrating a function with a finite jump still gives a continuous result with a corner. So:</p>
+<ul>
+  <li>Where E is smooth, V is smooth.</li>
+  <li>Where E jumps (at a surface charge), V stays <b>continuous</b> but has a <b>kink</b>, a point where it isn't differentiable.</li>
+  <li>V would only jump if E were infinite over zero thickness (an idealised dipole layer), which isn't what these questions mean.</li>
+</ul>
+<figure>
+<svg viewBox="0 0 420 150" role="img" aria-label="E jumps at a charged plane while V is continuous with a kink">
+  <line x1="20" y1="70" x2="200" y2="70" stroke="var(--line)"/>
+  <line x1="110" y1="10" x2="110" y2="130" stroke="var(--plus)" stroke-dasharray="4 3"/>
+  <path d="M20 95 H110 M110 45 H200" stroke="var(--accent)" stroke-width="3" fill="none"/>
+  <text x="110" y="145" text-anchor="middle" font-size="12" fill="var(--muted)">E: jumps</text>
+  <line x1="220" y1="70" x2="400" y2="70" stroke="var(--line)"/>
+  <line x1="310" y1="10" x2="310" y2="130" stroke="var(--plus)" stroke-dasharray="4 3"/>
+  <path d="M220 110 L310 30 L400 110" stroke="var(--good)" stroke-width="3" fill="none"/>
+  <text x="310" y="145" text-anchor="middle" font-size="12" fill="var(--muted)">V: continuous, with a kink</text>
+</svg>
+<figcaption>At a charged plane (dashed), E jumps by σ/ε₀ and V has a corner.</figcaption>
+</figure>
+
+<h3>From ρ to V: Poisson's equation</h3>
+<p>Combine ∇·E = ρ/ε₀ with E = −∇V:</p>
+<div class="formula">∇²V = −ρ/ε₀   (in 1D: d²V/dx² = −ρ(x)/ε₀)</div>
+<p>To find V, integrate ρ <b>twice</b>, so each integration raises the polynomial degree by one:</p>
+<div class="tablewrap"><table>
+<tr><th>ρ(x)</th><th>E(x)</th><th>V(x)</th></tr>
+<tr><td>0</td><td>constant</td><td>linear</td></tr>
+<tr><td>constant</td><td>linear</td><td>quadratic</td></tr>
+<tr><td>linear (ρ = αx)</td><td>quadratic</td><td><b>cubic</b></td></tr>
+</table></div>
+
+<div data-q="14"></div>
+<div data-q="4"></div>
+<div data-q="3"></div>
+<div data-q="15"></div>
+
+<!-- ================= 4. DIPOLES ================= -->
+<h2 id="dipole"><span class="num">4</span>Electric dipoles</h2>
+<p>A dipole is +q and −q separated by a distance d. Its <b>dipole moment</b> points from − to +:</p>
+<div class="formula">p = q d   [C·m]</div>
+
+<h3>Dipole in a uniform field</h3>
+<figure>
+<svg viewBox="0 0 420 170" role="img" aria-label="Dipole in uniform field: equal and opposite forces produce torque but no net force">
+  <defs>
+    <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--field)"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--plus)"/></marker>
+    <marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--minus)"/></marker>
+  </defs>
+  <g stroke="var(--field)" stroke-width="1.2" marker-end="url(#af)" opacity=".7">
+    <line x1="20" y1="25" x2="400" y2="25"/><line x1="20" y1="145" x2="400" y2="145"/>
+  </g>
+  <text x="395" y="18" text-anchor="end" font-size="12" fill="var(--muted)">E</text>
+  <line x1="170" y1="115" x2="250" y2="55" stroke="var(--ink)" stroke-width="2"/>
+  <circle cx="250" cy="55" r="11" fill="var(--plus)"/><text x="250" y="60" text-anchor="middle" font-size="14" fill="#fff">+</text>
+  <circle cx="170" cy="115" r="11" fill="var(--minus)"/><text x="170" y="120" text-anchor="middle" font-size="14" fill="#fff">−</text>
+  <line x1="262" y1="55" x2="330" y2="55" stroke="var(--plus)" stroke-width="2.5" marker-end="url(#ap)"/>
+  <text x="300" y="47" font-size="13" fill="var(--plus)">+qE</text>
+  <line x1="158" y1="115" x2="90" y2="115" stroke="var(--minus)" stroke-width="2.5" marker-end="url(#am)"/>
+  <text x="95" y="107" font-size="13" fill="var(--minus)">−qE</text>
+</svg>
+<figcaption>The two forces are equal and opposite: no net force, but they form a couple that rotates p toward E.</figcaption>
+</figure>
+<div class="formula">F<sub>net</sub> = qE + (−q)E = 0   τ = p × E   U = −p · E</div>
+<p>Net force appears only in a <b>non-uniform</b> field: F = ∇(p·E). Keep the three quantities apart: <i>force</i> is zero, <i>torque</i> is a cross product (a vector), <i>energy</i> is a dot product (a scalar).</p>
+
+<h3>Equivalent charge separation</h3>
+<p>To give a proton and an electron (charge e = 1.6×10⁻¹⁹ C) the same moment as a molecule, solve p = e·d for d:</p>
+<div class="formula">d = p / e = 6.1×10⁻³⁰ / 1.6×10⁻¹⁹ ≈ 3.8×10⁻¹¹ m</div>
+<p>That's about a third of the O–H bond length, which tells you water's electrons are only partly shifted toward the oxygen.</p>
+
+<div data-q="1"></div>
+<div data-q="13"></div>
+
+<!-- ================= 5. MOTION ================= -->
+<h2 id="motion"><span class="num">5</span>Charges in fields</h2>
+<h3>Equilibrium: electric force balances weight</h3>
+<p>For a particle at rest, the forces sum to zero: qE = mg, so</p>
+<div class="formula">|q| = m g / E</div>
+<p>Sign: the electric force has to point <b>up</b>. If E points up, q &gt; 0; if E points down, q &lt; 0. Watch your units: mass is often given in grams or mg, and you need kg.</p>
+
+<h3>Does a charge follow a field line?</h3>
+<p>Field lines give the direction of the <b>force</b> (and acceleration), not of the velocity. A particle follows a line only if its velocity stays tangent to it. On a curved line the particle would need a centripetal force pointing toward the curve's centre, but the electric force points along the line. So inertia carries it off the curve.</p>
+<p>It follows a field line only when <b>both</b> conditions hold:</p>
+<ul>
+  <li>the line is <b>straight</b>, and</li>
+  <li>the initial velocity is <b>zero or parallel</b> to E.</li>
+</ul>
+
+<div data-q="6"></div>
+<div data-q="10"></div>
+
+<!-- ================= 6. CAPACITORS ================= -->
+<h2 id="caps"><span class="num">6</span>Capacitors in series and parallel</h2>
+<div class="formula">Parallel: C = C₁ + C₂   (same V, charges add)<br>Series: 1/C = 1/C₁ + 1/C₂   (same Q, voltages add)</div>
+<ul>
+  <li><b>Parallel</b> is like making the plate area bigger, so it always <b>increases</b> capacitance.</li>
+  <li><b>Series</b> is like making the gap wider, so the result is always <b>smaller than the smallest</b> capacitor: C = C₁C₂/(C₁+C₂).</li>
+  <li>Capacitance depends only on geometry and the dielectric. Changing the voltage doesn't change C.</li>
+</ul>
+<p>Example with 100 pF and 50 pF: parallel gives 150 pF, series gives 100·50/150 ≈ 33.3 pF.</p>
+
+<div data-q="11"></div>
+
+<!-- ================= QUIZ ================= -->
+<h2 id="quiz">Practice quiz</h2>
+<p>All 15 questions in random order, without the surrounding theory. Try it after reading the sections above.</p>
+<div class="card">
+  <div class="bar">
+    <button class="btn" id="startQuiz" type="button">Start / reshuffle</button>
+    <span>Score: <span class="score" id="score">0 / 0</span></span>
+  </div>
+</div>
+<div id="quizBody"></div>
+
+</div>
+
+<script>
+const Q = {
+ 1:{stem:"What force F acts on an electric dipole of moment p in a uniform electric field E?",
+    opts:["zero","It depends on the orientation of p relative to E","p × E","p · E"],ans:0,
+    why:"In a uniform field the forces +qE and −qE cancel, so the net force is zero for any orientation. p × E is the <b>torque</b> and −p·E is the <b>potential energy</b>. Neither is a force."},
+ 2:{stem:"How large is the discontinuity of the <b>tangential</b> component of E across a uniformly charged plane with surface density σ?",
+    opts:["0","σ/ε₀","σ/(2ε₀)","2σ/ε₀"],ans:0,rec:true,
+    why:"The tangential component is always continuous because ∮E·dl = 0 around a thin rectangle straddling the plane. σ/ε₀ is the jump of the <b>normal</b> component."},
+ 3:{stem:"The electrostatic potential associated with an electrostatic field is:",
+    opts:["always continuous, but with possible points of non-differentiability where there are charge discontinuities","always continuous and always differentiable","discontinuous in the presence of surface layers of charge","like the electric field: continuous where E is continuous, discontinuous where E is"],ans:0,
+    why:"V = −∫E·dl. Integrating a field with a finite jump (at a surface charge) gives a continuous V with a <b>kink</b>. So V is continuous but not always differentiable. A finite jump in E never makes V jump."},
+ 4:{stem:"The potential of a charge distribution is V = a x² + b y z (a, b constants). What is the associated electric field?",
+    opts:["E = (−2a x, −b z, −b y)","zero, because the electric field is conservative","E = (2a x, b z, b y)","E = −(a x² + b y z)"],ans:0,rec:true,
+    why:"E = −∇V = −(∂V/∂x, ∂V/∂y, ∂V/∂z) = −(2a x, b z, b y). Watch the minus sign. A conservative field is a gradient. It doesn't have to be zero."},
+ 5:{stem:"The Coulomb constant k = 1/(4πε₀). In SI base units, k is measured in:",
+    opts:["A⁻²·kg⁻¹·m⁻³·s⁴","A⁻¹·kg·m²·s⁻²","A⁻³·kg·m⁻³·s⁻²","A⁻²·kg·m³·s⁻⁴"],ans:3,
+    why:"[k] = N·m²/C² = (kg·m·s⁻²)·m² / (A·s)² = kg·m³·s⁻⁴·A⁻². (For comparison, ε₀ is kg⁻¹·m⁻³·s⁴·A². Option a has those powers but with A⁻², so it's a trap.)"},
+ 6:{stem:"A particle of mass m = 2 g is in equilibrium under its weight and an upward electric field of 500 N/C. What is its charge?",
+    opts:["q = +3.9×10⁻⁵ C","q = −3.9×10⁻⁵ C","q = +3.9×10⁻² C","q = +2.5×10² C"],ans:0,rec:true,
+    why:"qE = mg ⇒ q = mg/E = (2×10⁻³ kg)(9.81)/500 ≈ 3.9×10⁻⁵ C. The force has to point up and E points up, so q is positive. (Option c forgets to convert grams to kg.)"},
+ 7:{stem:"What are the units of ∇·E, where E is the electrostatic field?",
+    opts:["V/m²","V/m","V·m","C/m²"],ans:0,rec:true,
+    why:"E is in V/m, and each spatial derivative divides by another metre, giving V/m². Check with Gauss: ∇·E = ρ/ε₀ → (C/m³)/(C/(V·m)) = V/m²."},
+ 8:{stem:"Two infinite parallel planes a distance d apart carry surface charge densities equal in magnitude and opposite in sign. Which is true?",
+    opts:["None of the others","The electrostatic field is non-zero and uniform in the space between the planes","The electrostatic field is zero between the planes","The field between the planes has intensity proportional to d"],ans:1,
+    why:"Each plane gives σ/(2ε₀). Between them the fields add to σ/ε₀, which is uniform and doesn't depend on d. Outside they cancel."},
+ 9:{stem:"Electric voltage is measured in volts. The volt can be expressed as:",
+    opts:["kg·m²·s⁻³·A⁻¹","kg·m·s⁻²·A⁻¹","kg·m²·s⁻²·A","A·s"],ans:0,rec:true,
+    why:"V = J/C = (kg·m²·s⁻²)/(A·s) = kg·m²·s⁻³·A⁻¹. Equivalent forms: W/A, N·m/C."},
+ 10:{stem:"An electric charge q in a non-uniform external field E moves along a field line:",
+    opts:["only if the field lines are straight and its initial velocity is zero or parallel to E","never","always","only if its initial velocity is zero"],ans:0,
+    why:"The force is tangent to the field line, but on a curved line the particle needs a centripetal force, which E doesn't supply. So the line has to be straight <b>and</b> the velocity has to start along it."},
+ 11:{stem:"You have two capacitors of 100 pF and 50 pF. To get a higher capacitance you can:",
+    opts:["there are not enough elements to answer","connect them in parallel, giving a maximum capacitance of 150 pF","connect them either in series or parallel and increase the applied voltage","connect them in series, giving 150 pF"],ans:1,rec:true,
+    why:"Parallel: C = C₁ + C₂ = 150 pF. Series gives C₁C₂/(C₁+C₂) ≈ 33 pF, which is smaller than either. Voltage doesn't change capacitance."},
+ 12:{stem:"An infinitely long straight wire carries uniform linear charge density λ. What is |E| at distance r?",
+    opts:["λ / (2π ε₀ r)","λ / (4π ε₀ r²)","λ / (2 ε₀)","λ / (4π ε₀ r)"],ans:0,rec:true,
+    why:"Gauss with a coaxial cylinder: E·2πrL = λL/ε₀ ⇒ E = λ/(2πε₀r). It goes as 1/r, not 1/r² (that's a point charge), and isn't constant (that's a plane)."},
+ 13:{stem:"The dipole moment of a water molecule is about 6.1×10⁻³⁰ C·m. At what distance d would a proton and an electron have the same dipole moment?",
+    opts:["d = 7.6×10⁻¹¹ m","d = 3.8×10⁻¹¹ m","d = 1.9×10⁻¹¹ m","d = 5.2×10⁻¹¹ m"],ans:1,
+    why:"p = e·d ⇒ d = 6.1×10⁻³⁰ / 1.6×10⁻¹⁹ ≈ 3.8×10⁻¹¹ m."},
+ 14:{stem:"An electrostatic field created by a charge distribution with density ρ is:",
+    opts:["irrotational","uniform","solenoidal","with zero gradient"],ans:0,
+    why:"Electrostatic fields are conservative, so ∇×E = 0 (irrotational). They are not solenoidal in general, because ∇·E = ρ/ε₀ ≠ 0 where there is charge."},
+ 15:{stem:"In a planar region the volume charge density grows linearly along x. The potential in that region:",
+    opts:["grows as a cubic polynomial along the same direction","grows quadratically along the same direction","also varies linearly along the same direction","cannot be determined from the information given"],ans:0,
+    why:"Poisson: d²V/dx² = −ρ/ε₀ = −αx/ε₀. Integrating twice gives V ∝ x³ (plus linear terms). Linear ρ → quadratic E → cubic V."}
+};
+
+function render(el, id, num){
+  const q = Q[id];
+  const box = document.createElement('div');
+  box.className = 'q';
+  const label = num ? `Quiz ${num}` : `Exam question ${id}`;
+  box.innerHTML = `<div class="tag">${label}${q.rec ? '<span class="rec">· reconstructed</span>' : ''}</div><div class="stem">${q.stem}</div>`;
+  q.opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='opt';
+    b.innerHTML = `<span class="letter">${'abcd'[i]}.</span>${o}`;
+    b.addEventListener('click',()=>{
+      if(box.classList.contains('done')) return;
+      box.classList.add('done');
+      box.querySelectorAll('button.opt').forEach((x,j)=>{ x.disabled=true; if(j===q.ans) x.classList.add('right'); });
+      if(i!==q.ans) b.classList.add('wrong');
+      box.dispatchEvent(new CustomEvent('answered',{bubbles:true,detail:{correct:i===q.ans}}));
+    });
+    box.appendChild(b);
+  });
+  const why = document.createElement('div');
+  why.className='why'; why.innerHTML = '<b>Why:</b> ' + q.why;
+  box.appendChild(why);
+  el.replaceWith(box);
+  return box;
+}
+document.querySelectorAll('[data-q]').forEach(el=>render(el, +el.dataset.q));
+
+// practice quiz
+let right=0, done=0;
+const scoreEl=document.getElementById('score'), body=document.getElementById('quizBody');
+function startQuiz(){
+  right=0; done=0; scoreEl.textContent='0 / 15'; body.innerHTML='';
+  const ids=Object.keys(Q).map(Number).sort(()=>Math.random()-.5);
+  ids.forEach((id,k)=>{ const ph=document.createElement('div'); body.appendChild(ph); render(ph,id,k+1); });
+}
+body.addEventListener('answered',e=>{ done++; if(e.detail.correct) right++; scoreEl.textContent=`${right} / 15` + (done===15 ? (right>=12?' — ready for the test':' — review the sections you missed') : ''); });
+document.getElementById('startQuiz').addEventListener('click',startQuiz);
+startQuiz();
+
+// theme toggle
+document.getElementById('themebtn').addEventListener('click',()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

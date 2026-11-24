@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetostatics Study Guide</title>
+<style>
+:root{
+  --bg:#f7f6f2; --card:#ffffff; --ink:#1d1f24; --muted:#5d6370; --line:#e2e0d8;
+  --accent:#2f5fd0; --accent-soft:#e8eefc; --good:#1f8a4c; --good-soft:#e5f5ec;
+  --bad:#c0392b; --bad-soft:#fbeaea; --warn:#9a6a00; --warn-soft:#fff5dc;
+  --plus:#d0402f; --minus:#2f5fd0; --field:#7a7f8c;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14161b; --card:#1d2027; --ink:#e7e8ec; --muted:#9aa0ad; --line:#2e323c;
+    --accent:#7aa2ff; --accent-soft:#1f2a44; --good:#4cc787; --good-soft:#163024;
+    --bad:#ff7a6b; --bad-soft:#3a1f1c; --warn:#f2c14e; --warn-soft:#3a3016;
+    --plus:#ff7a6b; --minus:#7aa2ff; --field:#8d93a1;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14161b; --card:#1d2027; --ink:#e7e8ec; --muted:#9aa0ad; --line:#2e323c;
+  --accent:#7aa2ff; --accent-soft:#1f2a44; --good:#4cc787; --good-soft:#163024;
+  --bad:#ff7a6b; --bad-soft:#3a1f1c; --warn:#f2c14e; --warn-soft:#3a3016;
+  --plus:#ff7a6b; --minus:#7aa2ff; --field:#8d93a1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+header h1{font-size:1.9rem;margin:.2em 0 .1em;letter-spacing:-.01em}
+header p{color:var(--muted);margin:.2em 0}
+.pages{font-size:.88rem;margin-bottom:6px}
+.pages a{color:var(--accent)}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+nav.toc a{font-size:.88rem;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+h2{font-size:1.35rem;margin:48px 0 8px;padding-top:8px;border-top:1px solid var(--line)}
+h2 .num{color:var(--accent);margin-right:6px}
+h3{font-size:1.05rem;margin:24px 0 6px}
+p,li{max-width:70ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.formula{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.12rem;background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:6px;margin:12px 0;overflow-x:auto}
+.math{font-family:"Cambria Math","STIX Two Math",Georgia,serif;white-space:nowrap}
+.tip{background:var(--warn-soft);border-left:4px solid var(--warn);padding:10px 14px;border-radius:6px;margin:12px 0}
+.tip b:first-child{color:var(--warn)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+figure{margin:14px 0;text-align:center}
+figure svg{max-width:100%;height:auto}
+figcaption{font-size:.85rem;color:var(--muted)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:18px 0}
+.q .tag{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.q .stem{margin:6px 0 10px;font-weight:500}
+.q button.opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer}
+.q button.opt:hover:not([disabled]){border-color:var(--accent);background:var(--accent-soft)}
+.q button.opt[disabled]{cursor:default}
+.q button.opt.right{border-color:var(--good);background:var(--good-soft)}
+.q button.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.q .why{display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--accent-soft);font-size:.95rem}
+.q.done .why{display:block}
+.q .letter{font-weight:700;margin-right:8px;color:var(--muted)}
+#quiz .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{font:inherit;border:0;border-radius:8px;padding:9px 16px;background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#10131a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#10131a}}
+.score{font-weight:700}
+.themebtn{position:fixed;top:12px;right:12px;font-size:.8rem;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.sheet div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.sheet div b{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+svg text{font-family:system-ui,"Segoe UI",sans-serif}
+</style>
+</head>
+<body>
+<button class="themebtn" id="themebtn" type="button">Toggle theme</button>
+<div class="wrap">
+
+<header>
+  <div class="pages"><a href="electrostatics.html">← Part 1: Electrostatics &amp; conductors</a> · <b>Part 2: Magnetostatics &amp; currents</b></div>
+  <h1>Magnetostatics &amp; Currents</h1>
+  <p>A study guide built around the 15 questions of <em>Test Part 2 (Magnetostatic and currents)</em>. Each section covers the theory first, then the exam question. Click an option to see whether it's right and why.</p>
+  <p style="font-size:.88rem">All values and answers come from your Moodle review page, and I re-checked every calculation.</p>
+</header>
+
+<nav class="toc">
+  <a href="#sheet">Cheat sheet</a>
+  <a href="#current">1 · Current &amp; drift</a>
+  <a href="#conductors">2 · Conductors &amp; RC</a>
+  <a href="#lorentz">3 · Magnetic force</a>
+  <a href="#sources">4 · Fields of currents</a>
+  <a href="#induction">5 · Induction</a>
+  <a href="#quiz">Practice quiz</a>
+</nav>
+
+<!-- ================= CHEAT SHEET ================= -->
+<h2 id="sheet">Cheat sheet</h2>
+<div class="sheet">
+  <div><b>Current from carriers</b><span class="math">I = n q v<sub>d</sub> S</span></div>
+  <div><b>Ohm (local)</b><span class="math">J = σE</span>  (J = I/S)</div>
+  <div><b>Power</b><span class="math">P = I²R = V²/R = VI</span></div>
+  <div><b>Conductor in equilibrium</b><span class="math">E<sub>in</sub> = 0, V = const</span></div>
+  <div><b>RC at t = 0</b>C acts like a wire: <span class="math">V<sub>R</sub> = ℰ</span></div>
+  <div><b>Lorentz force</b><span class="math">F = q v × B</span></div>
+  <div><b>Ampère</b><span class="math">∮B·dl = μ₀ I<sub>enc</sub></span></div>
+  <div><b>Straight wire</b><span class="math">B = μ₀I / (2πr)</span></div>
+  <div><b>Inside a thick wire</b><span class="math">B = μ₀I r / (2πa²)</span></div>
+  <div><b>Centre of a loop</b><span class="math">B = μ₀I / (2R)</span></div>
+  <div><b>Parallel wires</b><span class="math">F/L = μ₀I₁I₂ / (2πd)</span>; same direction attracts</div>
+  <div><b>Faraday</b><span class="math">ℰ = −N dΦ/dt,  Q = NΔΦ / R</span></div>
+</div>
+
+<!-- ================= 1. CURRENT ================= -->
+<h2 id="current"><span class="num">1</span>Current, drift velocity and Ohm's law</h2>
+<h3>Where current comes from</h3>
+<p>A current is charge carriers drifting slowly through the wire. In a time Δt the carriers inside a length v<sub>d</sub>Δt of wire pass through a cross-section. That's a volume S·v<sub>d</sub>Δt containing n·S·v<sub>d</sub>Δt carriers, each with charge q:</p>
+<div class="formula">I = n q v<sub>d</sub> S     ⇔     v<sub>d</sub> = I / (n q S)     and     J = I/S = n q v<sub>d</sub></div>
+<p>Drift speeds are tiny (about 10⁻⁵ to 10⁻³ m/s) because n is huge (about 10²⁸ to 10²⁹ m⁻³ in metals). The signal travels fast, but the electrons themselves crawl.</p>
+
+<h3>Narrowing wire: same current, faster drift</h3>
+<p>Charge can't pile up anywhere in a steady circuit, so the <b>same I</b> flows through both wires. With I fixed and n the same (both copper), v<sub>d</sub> ∝ 1/S: a thinner wire means faster drift. It works like water speeding up in a narrower pipe.</p>
+<figure>
+<svg viewBox="0 0 460 130" role="img" aria-label="Thick wire joined to thin wire, with short drift arrows in the thick part and long ones in the thin part">
+  <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+  <rect x="20" y="25" width="210" height="80" rx="6" fill="var(--accent-soft)" stroke="var(--accent)"/>
+  <rect x="230" y="50" width="210" height="30" rx="4" fill="var(--accent-soft)" stroke="var(--accent)"/>
+  <g stroke="var(--accent)" stroke-width="2" marker-end="url(#ar1)">
+    <line x1="60" y1="50" x2="90" y2="50"/><line x1="130" y1="65" x2="160" y2="65"/><line x1="60" y1="85" x2="90" y2="85"/><line x1="150" y1="92" x2="180" y2="92"/>
+    <line x1="260" y1="65" x2="340" y2="65"/><line x1="350" y1="65" x2="430" y2="65"/>
+  </g>
+  <text x="125" y="122" text-anchor="middle" font-size="13" fill="var(--muted)">large S → slow v_d</text>
+  <text x="335" y="102" text-anchor="middle" font-size="13" fill="var(--muted)">small S → fast v_d</text>
+</svg>
+<figcaption>Same I in both parts, so v<sub>d</sub> = I/(nqS) goes up where S goes down.</figcaption>
+</figure>
+
+<h3>Ohm's law, local form</h3>
+<p>In an ohmic, isotropic conductor the current density at each point is proportional to the electric field at that same point:</p>
+<div class="formula">J = σ E   (σ = conductivity = 1/ρ)</div>
+<p>It's E that drives the carriers, not the value of V. Adding a constant to V changes nothing physical, so J can't depend on V itself, only on its slope (E = −∇V). Integrated over a wire, J = σE becomes V = RI with R = ρL/S.</p>
+
+<h3>Power dissipated</h3>
+<div class="formula">P = I²R    (first find I = n q v<sub>d</sub> S if you're given the carriers)</div>
+
+<div data-q="1"></div>
+<div data-q="9"></div>
+<div data-q="2"></div>
+<div data-q="11"></div>
+
+<!-- ================= 2. CONDUCTORS & RC ================= -->
+<h2 id="conductors"><span class="num">2</span>Conductors in equilibrium and RC circuits</h2>
+<h3>A conductor in equilibrium is equipotential</h3>
+<p>"Equilibrium" means the charges have stopped moving. If there were any field inside, free electrons would move, so <b>E = 0 inside</b>. Then V doesn't change from point to point (ΔV = −∫E·dl = 0), and the whole conductor, surface included, sits at <b>one potential</b>.</p>
+<p>What <em>is</em> larger near sharp tips is the surface charge density σ and the field just outside (E = σ/ε₀). The potential isn't. Don't confuse the two.</p>
+
+<h3>RC circuit: what happens at t = 0</h3>
+<p>A capacitor's voltage is V<sub>C</sub> = Q/C, and charge needs time to flow in. At the instant of connection Q = 0, so V<sub>C</sub> = 0 and the capacitor behaves like a plain wire. Kirchhoff's loop rule then puts the <b>whole emf across R</b>:</p>
+<div class="formula">ℰ = V<sub>R</sub> + V<sub>C</sub>   ⇒   at t = 0: V<sub>R</sub> = ℰ, I₀ = ℰ/R<br>later: V<sub>C</sub> = ℰ(1 − e<sup>−t/RC</sup>),  V<sub>R</sub> = ℰ e<sup>−t/RC</sup></div>
+<figure>
+<svg viewBox="0 0 440 170" role="img" aria-label="RC charging: V_R starts at emf and decays, V_C starts at zero and rises">
+  <line x1="40" y1="140" x2="420" y2="140" stroke="var(--line)"/><line x1="40" y1="20" x2="40" y2="140" stroke="var(--line)"/>
+  <line x1="40" y1="30" x2="420" y2="30" stroke="var(--muted)" stroke-dasharray="4 4"/>
+  <text x="34" y="34" text-anchor="end" font-size="12" fill="var(--muted)">ℰ</text>
+  <path d="M40 30 C 90 105, 160 132, 420 139" stroke="var(--plus)" stroke-width="3" fill="none"/>
+  <path d="M40 140 C 90 65, 160 38, 420 31" stroke="var(--good)" stroke-width="3" fill="none"/>
+  <text x="120" y="112" font-size="13" fill="var(--plus)">V_R</text>
+  <text x="120" y="62" font-size="13" fill="var(--good)">V_C</text>
+  <text x="420" y="158" text-anchor="end" font-size="12" fill="var(--muted)">t</text>
+</svg>
+<figcaption>At t = 0 all of ℰ is across R. After a long time all of it is across C and the current stops.</figcaption>
+</figure>
+
+<div data-q="4"></div>
+<div data-q="14"></div>
+
+<!-- ================= 3. LORENTZ ================= -->
+<h2 id="lorentz"><span class="num">3</span>Magnetic force on a moving charge</h2>
+<div class="formula">F = q v × B    |F| = |q| v B sin θ</div>
+<ul>
+  <li>Because of the cross product, F is <b>perpendicular to both v and B</b>, so it's perpendicular to the plane they span.</li>
+  <li>It does no work (F ⟂ v). It bends the path but never changes the speed.</li>
+  <li>It's zero when v ∥ B or v = 0.</li>
+</ul>
+
+<h3>Recipe for direction questions</h3>
+<ol>
+  <li>Find the <b>direction of B</b> at the charge's position (for a wire, use the right-hand grip: thumb along I, fingers curl along B).</li>
+  <li>Compute <b>v × B</b> with the unit-vector rules: x̂×ŷ = ẑ, ŷ×ẑ = x̂, ẑ×x̂ = ŷ, and reversing the order flips the sign.</li>
+  <li>Flip the result if q &lt; 0.</li>
+</ol>
+<figure>
+<svg viewBox="0 0 440 220" role="img" aria-label="Wire on y axis with current up, charge on positive x axis moving in +x, B into the page, force in +y">
+  <defs>
+    <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"/></marker>
+    <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"/></marker>
+    <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--plus)"/></marker>
+  </defs>
+  <line x1="120" y1="205" x2="120" y2="15" stroke="var(--plus)" stroke-width="5" marker-end="url(#ar4)"/>
+  <text x="104" y="24" text-anchor="end" font-size="13" fill="var(--plus)">I (+y)</text>
+  <line x1="20" y1="120" x2="420" y2="120" stroke="var(--line)"/>
+  <text x="415" y="138" text-anchor="end" font-size="12" fill="var(--muted)">x</text>
+  <g fill="none" stroke="var(--accent)" stroke-width="1.6">
+    <circle cx="260" cy="70" r="7"/><line x1="255" y1="65" x2="265" y2="75"/><line x1="265" y1="65" x2="255" y2="75"/>
+    <circle cx="330" cy="170" r="7"/><line x1="325" y1="165" x2="335" y2="175"/><line x1="335" y1="165" x2="325" y2="175"/>
+  </g>
+  <text x="275" y="75" font-size="12" fill="var(--accent)">B into page (−z)</text>
+  <circle cx="260" cy="120" r="10" fill="var(--plus)"/><text x="260" y="125" text-anchor="middle" font-size="13" fill="#fff">+</text>
+  <line x1="272" y1="120" x2="335" y2="120" stroke="var(--ink)" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <text x="305" y="112" font-size="13" fill="var(--ink)">v</text>
+  <line x1="260" y1="108" x2="260" y2="35" stroke="var(--warn)" stroke-width="3" marker-end="url(#ar3)"/>
+  <text x="250" y="40" text-anchor="end" font-size="13" fill="var(--warn)">F (+y)</text>
+</svg>
+<figcaption>Right of the wire, B points into the page. Then F = q(x̂ × (−ẑ)) = +q ŷ: the charge is pushed parallel to the current.</figcaption>
+</figure>
+<div class="tip"><b>Shortcut:</b> a positive charge moving <em>away</em> from a wire gets pushed in the direction of the current. One moving <em>toward</em> the wire gets pushed against it. This is the same reason parallel currents attract.</div>
+
+<div data-q="10"></div>
+<div data-q="5"></div>
+
+<!-- ================= 4. SOURCES ================= -->
+<h2 id="sources"><span class="num">4</span>Magnetic fields of currents</h2>
+<h3>Ampère's law</h3>
+<div class="formula">∮ B · dl = μ₀ I<sub>enc</sub>   (I<sub>enc</sub> = <b>signed</b> sum of the currents through the loop)</div>
+<p>Currents in one direction count +, currents in the other direction count −. Currents outside the loop count 0, even though they still create B along it. So the integral is zero when the enclosed currents cancel, for example two equal currents in opposite directions.</p>
+
+<h3>Long straight wire (radius a, uniform J)</h3>
+<p>Take a circle of radius r around the axis, so B·2πr = μ₀I<sub>enc</sub>.</p>
+<ul>
+  <li><b>Outside</b> (r ≥ a): I<sub>enc</sub> = I, so B = μ₀I / (2πr).</li>
+  <li><b>Inside</b> (r &lt; a): I<sub>enc</sub> = I·r²/a² (area fraction), so B = μ₀I r / (2πa²), which grows linearly with r.</li>
+</ul>
+<figure>
+<svg viewBox="0 0 440 170" role="img" aria-label="B versus r: linear rise inside the wire, 1/r decay outside">
+  <line x1="40" y1="140" x2="420" y2="140" stroke="var(--line)"/><line x1="40" y1="20" x2="40" y2="140" stroke="var(--line)"/>
+  <line x1="140" y1="20" x2="140" y2="140" stroke="var(--muted)" stroke-dasharray="4 4"/>
+  <text x="140" y="156" text-anchor="middle" font-size="12" fill="var(--muted)">r = a</text>
+  <text x="90" y="156" text-anchor="middle" font-size="12" fill="var(--muted)">a/2</text>
+  <path d="M40 140 L140 40" stroke="var(--accent)" stroke-width="3" fill="none"/>
+  <path d="M140 40 C 190 80, 260 105, 420 117" stroke="var(--accent)" stroke-width="3" fill="none"/>
+  <circle cx="90" cy="90" r="5" fill="var(--warn)"/>
+  <text x="98" y="84" font-size="12" fill="var(--warn)">half of the maximum</text>
+  <text x="70" y="40" font-size="13" fill="var(--ink)">∝ r</text><text x="300" y="98" font-size="13" fill="var(--ink)">∝ 1/r</text>
+</svg>
+<figcaption>At r = a/2: B = μ₀I(a/2)/(2πa²) = μ₀I/(4πa), half the value at the surface.</figcaption>
+</figure>
+
+<h3>Centre of a circular loop (Biot–Savart)</h3>
+<p>Every element dl is at the same distance R from the centre and perpendicular to the radius, so each contributes dB = μ₀I dl/(4πR²), all along the axis. Adding up 2πR of length:</p>
+<div class="formula">B = μ₀I·2πR / (4πR²) = μ₀ I / (2R)</div>
+<div class="tip"><b>Trap:</b> μ₀I/(2πR) is the <em>straight wire</em> formula. The loop has no π in it.</div>
+
+<h3>Force between parallel wires</h3>
+<p>Wire 1 makes B₁ = μ₀I₁/(2πd) at wire 2. Wire 2 feels F = I₂LB₁:</p>
+<div class="formula">F / L = μ₀ I₁ I₂ / (2π d)    same direction → attract, opposite → repel</div>
+<p>Handy number: μ₀/(2π) = 2×10⁻⁷ T·m/A.</p>
+
+<div data-q="13"></div>
+<div data-q="8"></div>
+<div data-q="7"></div>
+<div data-q="3"></div>
+
+<!-- ================= 5. INDUCTION ================= -->
+<h2 id="induction"><span class="num">5</span>Electromagnetic induction</h2>
+<h3>Faraday–Lenz</h3>
+<div class="formula">Φ = B A cos θ     ℰ = −N dΦ/dt</div>
+<p>An emf appears whenever the flux through the circuit changes, whether B changes, the area changes or the angle changes. The minus sign (Lenz's law) means the induced current opposes the change that caused it.</p>
+
+<h3>Three ways to change the flux</h3>
+<div class="tablewrap"><table>
+<tr><th>What changes</th><th>Flux</th><th>emf</th></tr>
+<tr><td>B grows linearly (dB/dt = k)</td><td>Φ = N A B(t)</td><td>ℰ = −N A k  (constant)</td></tr>
+<tr><td>Coil rotates at ω</td><td>Φ = B A cos ωt</td><td>ℰ = B A ω sin ωt</td></tr>
+<tr><td>B reverses (B → −B)</td><td>ΔΦ = −2BA per turn</td><td>gives a total charge (below)</td></tr>
+</table></div>
+
+<h3>Power in a rotating coil</h3>
+<div class="formula">P = ℰ² / R = A² B² ω² sin²ωt / R</div>
+<p>Check the powers when choosing an option: ℰ is linear in A and B, so P has A² and B².</p>
+
+<h3>Charge from a flux change</h3>
+<p>The time it takes doesn't matter. Integrate I = ℰ/R over time:</p>
+<div class="formula">Q = ∫ I dt = (N/R) ∫ |dΦ| = N ΔΦ / R</div>
+<p>When B flips from +B to −B, ΔΦ = 2BA, not BA. Forgetting the factor 2 is the classic mistake.</p>
+
+<div data-q="12"></div>
+<div data-q="6"></div>
+<div data-q="15"></div>
+
+<!-- ================= QUIZ ================= -->
+<h2 id="quiz">Practice quiz</h2>
+<p>All 15 questions in random order, without the surrounding theory.</p>
+<div class="card">
+  <div class="bar">
+    <button class="btn" id="startQuiz" type="button">Start / reshuffle</button>
+    <span>Score: <span class="score" id="score">0 / 0</span></span>
+  </div>
+</div>
+<div id="quizBody"></div>
+
+</div>
+
+<script>
+const Q = {
+ 1:{stem:"Two copper wires of different diameters are joined and carry a current. When electrons pass from the thicker wire into the thinner one, their drift speed:",
+    opts:["oscillates","decreases","increases","remains equal"],ans:2,
+    why:"The same current flows through both wires and n is the same (copper), so v<sub>d</sub> = I/(nqS) ∝ 1/S. A smaller section means a faster drift."},
+ 2:{stem:"A thin conductor has section S = 10⁻⁵ m², resistance R = 2×10⁻⁴ Ω, carrier density n = 10²⁸ m⁻³ and drift velocity v<sub>d</sub> = 2×10⁻³ m/s. What power does it dissipate?",
+    opts:["P = 0.20 W","P = 0.32 W","P = 0.64 W","P = 0.10 W"],ans:0,
+    why:"I = n e v<sub>d</sub> S = 10²⁸ · 1.6×10⁻¹⁹ · 2×10⁻³ · 10⁻⁵ = 32 A. P = I²R = 1024 · 2×10⁻⁴ ≈ 0.20 W."},
+ 3:{stem:"A long wire with I₁ = 0.2 A is h = 20 cm from a parallel long wire. What current (and direction) in the second wire gives an <b>attractive</b> force per unit length of 1 μN/m?",
+    opts:["10 A, opposite to I₁","5 A, opposite to I₁","5 A, same direction as I₁","10 A, same direction as I₁"],ans:2,
+    why:"F/L = μ₀I₁I₂/(2πh) = 2×10⁻⁷ · 0.2 · I₂ / 0.2 = 2×10⁻⁷ I₂ = 10⁻⁶ ⇒ I₂ = 5 A. Attraction needs parallel currents, so the same direction."},
+ 4:{stem:"In an isolated conductor in equilibrium, the potential:",
+    opts:["is maximum on the surface near the tips","is always zero","increases away from the centre if positively charged, decreases if negatively charged","has the same value at all points"],ans:3,
+    why:"In equilibrium E = 0 inside, so V doesn't change from point to point: the conductor is an equipotential. Near tips it's σ and the outside field that are larger, not V."},
+ 5:{stem:"A long straight wire lies on the y axis with current in +y. A positive charge moves along the x axis in +x. The magnetic force from the wire on the charge points in:",
+    opts:["positive x","negative y","negative x","positive y"],ans:3,
+    why:"On the +x side of the wire B points along −z (right-hand grip). F = q v × B = q x̂ × (−ẑ) = +q ŷ. The charge is moving away from the wire, so it's pushed along the current. (This assumes the charge is on the x &gt; 0 side, as the intended answer does.)"},
+ 6:{stem:"A uniform field B is perpendicular to a circular coil (area A, resistance R). From t = 0 the coil rotates about a diameter at constant ω. Neglecting self-induction, the dissipated power is:",
+    opts:["P = A B² ω² sin²ωt / R","there is not enough data to answer","P = A² B² ω² sin²ωt / R","P = A² B ω² sin²ωt / R"],ans:2,
+    why:"Φ = BA cos ωt ⇒ ℰ = −dΦ/dt = BAω sin ωt. P = ℰ²/R = A²B²ω² sin²ωt / R. Both A and B appear squared."},
+ 7:{stem:"The magnetic field at the centre of a circular coil of radius R carrying current I is:",
+    opts:["B = μ₀I / (2R)","B = μ₀I / (2πR)","B = μ₀I / R²","B = μ₀I / R"],ans:0,
+    why:"Biot–Savart: every element is at distance R and perpendicular to the radius, so B = μ₀I·2πR/(4πR²) = μ₀I/(2R). μ₀I/(2πR) is the straight-wire result."},
+ 8:{stem:"A long straight wire of radius a carries current I with uniform density over its section. The field at distance a/2 from the axis is:",
+    opts:["B = μ₀ I a / 4π","B = μ₀ I / (4πa)","B = μ₀ I / (2πa)","B = μ₀ I / (4πa²)"],ans:1,
+    why:"Ampère inside: B·2πr = μ₀I r²/a² ⇒ B = μ₀I r/(2πa²). At r = a/2: B = μ₀I/(4πa)."},
+ 9:{stem:"A copper wire with section 20 mm² carries i = 0.32 A, with n = 10²⁸ m⁻³ and q = 1.6×10⁻¹⁹ C. The drift speed is:",
+    opts:["v<sub>d</sub> = 10⁻⁶ m/s","v<sub>d</sub> = 0.64×10⁻⁶ m/s","v<sub>d</sub> = 0.64×10⁻⁵ m/s","v<sub>d</sub> = 10⁻⁵ m/s"],ans:3,
+    why:"v<sub>d</sub> = I/(nqS) = 0.32 / (10²⁸ · 1.6×10⁻¹⁹ · 20×10⁻⁶) = 0.32 / 3.2×10⁴ = 10⁻⁵ m/s. Remember 1 mm² = 10⁻⁶ m²."},
+ 10:{stem:"The Lorentz force on a charge q moving in a magnetic field B is:",
+    opts:["perpendicular to the plane of v and B","parallel to both v and B","parallel to the velocity v","parallel to B"],ans:0,
+    why:"F = q v × B, and a cross product is perpendicular to both factors, so it's perpendicular to the plane they span."},
+ 11:{stem:"In an isotropic ohmic conductor carrying DC, the current density vector at a point:",
+    opts:["is inversely proportional to the potential there","is proportional to the electric field vector there","has a modulus inversely proportional to |E| there","is proportional to the potential there"],ans:1,
+    why:"Local Ohm's law: J = σE. It depends on the field (the slope of V), never on the value of V, which is only defined up to a constant."},
+ 12:{stem:"A 10-turn coil of area 200 cm² sits in a uniform field perpendicular to its plane, changing linearly at 0.1 T/s. The induced emf is:",
+    opts:["10 mV","none of the proposed values is correct","−10 mV","−20 mV"],ans:3,
+    why:"ℰ = −N A dB/dt = −10 · 0.02 m² · 0.1 T/s = −0.02 V = −20 mV. (200 cm² = 0.02 m².)"},
+ 13:{stem:"Three conductors carry currents I₁, I₂, I₃ of equal magnitude. I₁ and I₂ point the same way; I₃ points the opposite way. The line integral of B is zero along the paths enclosing:",
+    opts:["I₁ and I₂","I₃ and I₂","I₁, I₂ and I₃","I₂"],ans:1,
+    why:"∮B·dl = μ₀ × (signed enclosed current). I₂ − I₃ = 0. Every other choice leaves a net current: 2I, I, or I."},
+ 14:{stem:"A resistor and a capacitor are connected in series to an ideal battery. At the instant of connection, the voltage across the resistor is:",
+    opts:["equal to the emf of the battery","greater than zero but less than the emf","independent of the emf","zero"],ans:0,
+    why:"At t = 0 the capacitor is uncharged, so V<sub>C</sub> = Q/C = 0 and it acts like a wire. The loop rule then gives V<sub>R</sub> = ℰ, and V<sub>R</sub> decays as ℰe<sup>−t/RC</sup> afterwards."},
+ 15:{stem:"100 turns are wound on an iron cylinder of section 0.001 m²; total circuit resistance 10 Ω. B in the iron goes from 1 T one way to 1 T the opposite way. How much charge flows?",
+    opts:["0.02 C","0.1 C","0.05 C","0.01 C"],ans:0,
+    why:"Q = NΔΦ/R. ΔΦ = 2BA = 2 · 1 · 0.001 = 0.002 Wb (the field reverses, so the change is 2B). Q = 100 · 0.002 / 10 = 0.02 C."}
+};
+
+function render(el, id, num){
+  const q = Q[id];
+  const box = document.createElement('div');
+  box.className = 'q';
+  box.innerHTML = `<div class="tag">${num ? 'Quiz ' + num : 'Exam question ' + id}</div><div class="stem">${q.stem}</div>`;
+  q.opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='opt';
+    b.innerHTML = `<span class="letter">${'abcd'[i]}.</span>${o}`;
+    b.addEventListener('click',()=>{
+      if(box.classList.contains('done')) return;
+      box.classList.add('done');
+      box.querySelectorAll('button.opt').forEach((x,j)=>{ x.disabled=true; if(j===q.ans) x.classList.add('right'); });
+      if(i!==q.ans) b.classList.add('wrong');
+      box.dispatchEvent(new CustomEvent('answered',{bubbles:true,detail:{correct:i===q.ans}}));
+    });
+    box.appendChild(b);
+  });
+  const why = document.createElement('div');
+  why.className='why'; why.innerHTML = '<b>Why:</b> ' + q.why;
+  box.appendChild(why);
+  el.replaceWith(box);
+}
+document.querySelectorAll('[data-q]').forEach(el=>render(el, +el.dataset.q));
+
+let right=0, done=0;
+const scoreEl=document.getElementById('score'), body=document.getElementById('quizBody');
+function startQuiz(){
+  right=0; done=0; scoreEl.textContent='0 / 15'; body.innerHTML='';
+  Object.keys(Q).map(Number).sort(()=>Math.random()-.5).forEach((id,k)=>{
+    const ph=document.createElement('div'); body.appendChild(ph); render(ph,id,k+1);
+  });
+}
+body.addEventListener('answered',e=>{ done++; if(e.detail.correct) right++; scoreEl.textContent=`${right} / 15` + (done===15 ? (right>=12?' — ready for the test':' — review the sections you missed') : ''); });
+document.getElementById('startQuiz').addEventListener('click',startQuiz);
+startQuiz();
+
+document.getElementById('themebtn').addEventListener('click',()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
